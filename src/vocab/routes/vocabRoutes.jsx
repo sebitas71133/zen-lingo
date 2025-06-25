@@ -1,4 +1,6 @@
 import { VocabLayout } from "../layout/VocabLayout";
+import { TagsPage } from "../pages/TagsPage";
+
 import { WordPage } from "../pages/WordPage";
 
 const vocabRoutes = {
@@ -9,7 +11,7 @@ const vocabRoutes = {
     { index: true, element: <WordPage /> },
     { path: "word", element: <WordPage /> },
     // { path: "favorite", element: <FavoritesPageUser /> },
-    // { path: "tools", element: <ToolsPage /> },
+    { path: "tags", element: <TagsPage /> },
   ],
 };
 

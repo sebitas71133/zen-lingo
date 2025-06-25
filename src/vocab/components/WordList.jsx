@@ -1,16 +1,28 @@
 import { useSelector } from "react-redux";
-import { Box, Pagination, Stack, Typography, Snackbar } from "@mui/material";
+import {
+  Box,
+  Pagination,
+  Stack,
+  Typography,
+  Snackbar,
+  CircularProgress,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { WordCard } from "./WordCard";
 
 import { WordFormDialog } from "./WordFormDialog";
-import { useWordStore } from "../hooks/useWordStore";
+
 import { SearchAndFilters } from "./SearchAndFilters";
+import { useGetWordsQuery } from "../../services/wordApi";
+import { useAddTagMutation, useGetTagsQuery } from "../../services/tagsApi";
+import { useWordStore } from "../hooks/useWordStoreQuery";
 
 export const WordList = () => {
-  const words = useSelector((state) => state.word.words);
+  const { data: words = [], isLoading, isError } = useGetWordsQuery();
   console.log(words);
-  const allTags = [...new Set(words.flatMap((w) => w.tags || []))];
+  // const allTags = [...new Set(words.flatMap((w) => w.tags || []))];
+
+  const [addTag] = useAddTagMutation();
 
   const [page, setPage] = useState(1);
   const itemsPerPage = 3;
@@ -21,6 +33,8 @@ export const WordList = () => {
     selectedTags: [],
     onlyLearned: false,
   });
+
+  console.log({ filters });
 
   const filteredWords = words.filter((word) => {
     const matchesSearch =
@@ -34,7 +48,9 @@ export const WordList = () => {
 
     const matchesTags =
       filters.selectedTags.length === 0 ||
-      filters.selectedTags.every((tag) => word.tags?.includes(tag));
+      filters.selectedTags.every((tag) =>
+        word.tags?.map((e) => e.name).includes(tag)
+      );
 
     const matchesLearned = !filters.onlyLearned || word.learned;
 
@@ -59,6 +75,7 @@ export const WordList = () => {
 
   const handleDelete = async (word) => {
     if (confirm("¿Estás seguro de eliminar esta palabra?")) {
+      console.log({ word });
       await deleteWordById(word.id);
     }
   };
@@ -71,6 +88,27 @@ export const WordList = () => {
     if (!openForm) setWordToEdit(null);
   }, [openForm]);
 
+  if (isLoading) {
+    return (
+      <Stack alignItems="center" mt={4}>
+        <CircularProgress />
+        <Typography>Cargando palabras...</Typography>
+      </Stack>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Typography
+        variant="h6"
+        color="error"
+        sx={{ mt: 3, textAlign: "center" }}
+      >
+        Ocurrió un error al cargar las palabras 😢
+      </Typography>
+    );
+  }
+
   if (!words.length) {
     return (
       <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
@@ -81,7 +119,7 @@ export const WordList = () => {
 
   return (
     <Box sx={{ mt: 3 }}>
-      <SearchAndFilters onChange={setFilters} allTags={allTags} />
+      <SearchAndFilters onChange={setFilters} />
       <Stack spacing={2}>
         {currentWords.map((word) => (
           <WordCard

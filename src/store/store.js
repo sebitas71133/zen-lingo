@@ -5,6 +5,8 @@ import { authReducer } from "./slices/authSlice";
 import { usersReducer } from "./slices/userSlice";
 import { wordReducer } from "./slices/wordSlice";
 import { tagReducer } from "./slices/tagSlice";
+import { wordApi } from "../services/wordApi";
+import { tagsApi } from "../services/tagsApi";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +16,9 @@ export const store = configureStore({
     theme: themeReducer,
     word: wordReducer,
     tags: tagReducer,
+    [wordApi.reducerPath]: wordApi.reducer,
+    [tagsApi.reducerPath]: tagsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([wordApi.middleware, tagsApi.middleware]),
 });

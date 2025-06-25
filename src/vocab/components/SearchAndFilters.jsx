@@ -7,10 +7,9 @@ import {
   Chip,
   Autocomplete,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useTagStore } from "../hooks/useTagStore";
-import { useLoadTagsOnMount } from "../hooks/useLoadTagsOnMount";
+import { useGetTagsQuery } from "../../services/tagsApi";
 
 const wordTypes = ["Sustantivo", "Verbo", "Adjetivo", "Adverbio"];
 
@@ -20,15 +19,11 @@ export const SearchAndFilters = ({ onChange }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [onlyLearned, setOnlyLearned] = useState(false);
 
-  const { loadTags } = useTagStore(); // ✅ ahora está dentro del componente
-  const allTags = useSelector((state) => state.tags.list); // ✅ también aquí
+  const { uid } = useSelector((state) => state.auth);
 
-  // Cargar los tags al montar
-  //   useEffect(() => {
-  //     loadTags();
-  //   }, []);
-
-  useLoadTagsOnMount();
+  const { data: tags = [], isLoading } = useGetTagsQuery(undefined, {
+    skip: !uid,
+  });
 
   const emitChange = (newFilters) => {
     onChange({
@@ -38,6 +33,11 @@ export const SearchAndFilters = ({ onChange }) => {
       onlyLearned,
       ...newFilters,
     });
+  };
+
+  const handleTagChange = (event, newValue) => {
+    setSelectedTags(newValue);
+    emitChange({ selectedTags: newValue.map((t) => t.name) });
   };
 
   return (
@@ -83,19 +83,18 @@ export const SearchAndFilters = ({ onChange }) => {
 
       <Autocomplete
         multiple
-        options={allTags}
+        options={tags}
+        getOptionLabel={(option) => option.name}
         value={selectedTags}
-        onChange={(event, newValue) => {
-          setSelectedTags(newValue);
-          emitChange({ selectedTags: newValue });
-        }}
+        onChange={handleTagChange}
+        loading={isLoading}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
               variant="outlined"
-              label={option}
+              label={option.name}
               {...getTagProps({ index })}
-              key={option}
+              key={option.id}
             />
           ))
         }

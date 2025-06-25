@@ -18,7 +18,7 @@ export const WordCard = ({ word, onEdit, onDelete, onToggleLearned }) => {
     translation,
     type,
     definition,
-    examples,
+    examples = [],
     tags = [],
     isLearned,
   } = word;
@@ -43,6 +43,7 @@ export const WordCard = ({ word, onEdit, onDelete, onToggleLearned }) => {
           <Typography variant="h6">
             {term} — <b>{translation}</b>
           </Typography>
+
           <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
             <IconButton onClick={onToggleLearned}>
               <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
@@ -62,29 +63,38 @@ export const WordCard = ({ word, onEdit, onDelete, onToggleLearned }) => {
           </Typography>
         )}
 
-        {examples?.length > 0 && (
+        {examples.length > 0 && (
           <Typography variant="body2" sx={{ fontStyle: "italic" }}>
             Ejemplo: {examples[0]}
           </Typography>
         )}
 
-        {/* Tags */}
         {tags.length > 0 && (
           <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mt: 1 }}>
             {tags.map((tag, i) => (
-              <Chip key={i} label={tag} size="small" color="secondary" />
+              <Chip
+                key={tag.id}
+                label={tag.name}
+                size="small"
+                color="secondary"
+                variant="outlined"
+              />
             ))}
           </Stack>
         )}
       </CardContent>
 
       <CardActions>
-        <IconButton onClick={onEdit}>
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={onDelete}>
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title="Editar">
+          <IconButton onClick={onEdit}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Eliminar">
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </CardActions>
     </Card>
   );

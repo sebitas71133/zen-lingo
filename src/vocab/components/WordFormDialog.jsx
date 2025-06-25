@@ -10,13 +10,13 @@ import {
   Chip,
   Box,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useWordStore } from "../hooks/useWordStore";
-import { useTagStore } from "../hooks/useTagStore";
-import { useSelector } from "react-redux";
-import { useLoadTagsOnMount } from "../hooks/useLoadTagsOnMount";
+
+import { useGetTagsQuery } from "../../services/tagsApi";
+import { useWordStore } from "../hooks/useWordStoreQuery";
 
 const types = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
 
@@ -31,22 +31,11 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
     formState: { errors },
   } = useForm();
 
-  const { loadTags, addTagIfNotExists } = useTagStore();
-
-  const allTags = useSelector((state) => state.tags.list);
-
   const [tags, setTags] = useState([]);
-
   const [examples, setExamples] = useState([]);
   const [exampleInput, setExampleInput] = useState("");
 
-  //   useEffect(() => {
-  //     loadTags(); // Cargar tags al abrir
-  //   }, []);
-
-  useLoadTagsOnMount();
-
-  console.log({ allTags });
+  const { data: allTags = [], isLoading: loadingTags } = useGetTagsQuery();
 
   const onSubmit = async (data) => {
     const wordData = {
@@ -55,12 +44,6 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
       examples,
       updatedAt: new Date().toISOString(),
     };
-
-    for (const tag of tags) {
-      await addTagIfNotExists(tag);
-    }
-
-    await loadTags();
 
     if (initialData?.id) {
       await updateWordById(initialData.id, wordData);
@@ -80,14 +63,29 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
 
   useEffect(() => {
     if (initialData) {
-      Object.entries(initialData).forEach(([key, value]) => {
+      const { tags, examples, ...rest } = initialData;
+
+      Object.entries(rest).forEach(([key, value]) => {
         setValue(key, value);
       });
 
-      setTags(initialData.tags || []);
-      setExamples(initialData.examples || []);
+      if (Array.isArray(tags)) {
+        setTags(
+          tags.map((tag) =>
+            typeof tag === "string" ? { id: tag.toLowerCase(), name: tag } : tag
+          )
+        );
+      } else {
+        setTags([]);
+      }
+
+      if (Array.isArray(examples)) {
+        setExamples(examples);
+      } else {
+        setExamples([]);
+      }
     }
-  }, [initialData]);
+  }, [initialData, setValue]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -203,35 +201,36 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
             ))}
           </Stack>
 
-          {/* 🌈 Tags */}
+          {/* 🌈 Tags desde API */}
           <Autocomplete
             multiple
-            freeSolo
+            disableCloseOnSelect
             options={allTags}
+            getOptionLabel={(option) => option.name}
+            loading={loadingTags}
             value={tags}
-            onChange={(event, newValue) => {
-              setTags(newValue);
-            }}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  variant="outlined"
-                  label={option}
-                  {...getTagProps({ index })}
-                  key={option}
-                />
-              ))
-            }
+            onChange={(event, newValue) => setTags(newValue)}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             renderInput={(params) => (
               <TextField
                 {...params}
-                variant="outlined"
-                label="Etiquetas (tags)"
+                label="Etiquetas"
+                placeholder="Selecciona tags"
                 margin="normal"
-                placeholder="Agrega presionando enter o selecciona tags"
+                fullWidth
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingTags ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
               />
             )}
-            sx={{ mt: 2 }}
           />
         </form>
       </DialogContent>
