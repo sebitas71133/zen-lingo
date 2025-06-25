@@ -21,7 +21,7 @@ import { useWordStore } from "../hooks/useWordStoreQuery";
 const types = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
 
 export const WordFormDialog = ({ open, onClose, initialData }) => {
-  const { createWord, updateWordById } = useWordStore();
+  const { createWord, updateWordById, isUpdating, isAdding } = useWordStore();
 
   const {
     control,
@@ -235,10 +235,20 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button variant="contained" onClick={handleSubmit(onSubmit)}>
-          Guardar
-        </Button>
+        {isUpdating || isAdding ? (
+          <CircularProgress size={20} />
+        ) : (
+          <>
+            <Button onClick={onClose}>Cancelar</Button>
+            <Button
+              disabled={isUpdating}
+              variant="contained"
+              onClick={handleSubmit(onSubmit)}
+            >
+              Guardar
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );

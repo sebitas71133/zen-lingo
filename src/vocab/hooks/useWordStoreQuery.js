@@ -7,9 +7,9 @@ import {
 
 export const useWordStore = () => {
   const { data: words = [], isLoading, isError, refetch } = useGetWordsQuery();
-  const [addWord] = useAddWordMutation();
-  const [deleteWord] = useDeleteWordMutation();
-  const [updateWord] = useUpdateWordMutation();
+  const [addWord, { isLoading: isAdding }] = useAddWordMutation();
+  const [deleteWord, { isLoading: isDeleting }] = useDeleteWordMutation();
+  const [updateWord, { isLoading: isUpdating }] = useUpdateWordMutation();
 
   const createWord = async (wordData) => {
     await addWord(wordData);
@@ -32,5 +32,8 @@ export const useWordStore = () => {
     createWord,
     deleteWordById,
     updateWordById,
+    isUpdating,
+    isDeleting,
+    isAdding,
   };
 };

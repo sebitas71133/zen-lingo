@@ -7,12 +7,19 @@ import {
   Chip,
   Stack,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-export const WordCard = ({ word, onEdit, onDelete, onToggleLearned }) => {
+export const WordCard = ({
+  word,
+  onEdit,
+  onDelete,
+  onToggleLearned,
+  isUpdating,
+}) => {
   const {
     word: term,
     translation,
@@ -45,8 +52,12 @@ export const WordCard = ({ word, onEdit, onDelete, onToggleLearned }) => {
           </Typography>
 
           <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
-            <IconButton onClick={onToggleLearned}>
-              <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
+            <IconButton disabled={isUpdating} onClick={onToggleLearned}>
+              {isUpdating ? (
+                <CircularProgress size={20} />
+              ) : (
+                <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
+              )}
             </IconButton>
           </Tooltip>
         </Stack>

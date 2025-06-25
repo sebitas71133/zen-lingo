@@ -1,5 +1,5 @@
 import { WordFormDialog } from "../components/WordFormDialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CircularProgress,
   Container,
@@ -10,14 +10,22 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { WordList } from "../components/WordList";
 
-import { useSelector } from "react-redux";
 import { SearchAndFilters } from "../components/SearchAndFilters";
 import { useGetWordsQuery } from "../../services/wordApi";
+import { useFilteredWords } from "../hooks/useFilteredWords";
 
 export const WordPage = () => {
   const [openForm, setOpenForm] = useState(false);
 
-  const { data = [], isLoading, isError } = useGetWordsQuery();
+  const [filters, setFilters] = useState({
+    searchText: "",
+    type: "",
+    selectedTags: [],
+    onlyLearned: false,
+  });
+
+  const { data: words = [], isLoading, isError } = useGetWordsQuery();
+  const filteredWords = useFilteredWords(words, filters);
 
   if (isLoading) {
     return (
@@ -40,7 +48,7 @@ export const WordPage = () => {
     );
   }
 
-  if (!data.length) {
+  if (!words.length) {
     return (
       <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
         No hay palabras guardadas todavía 😅
@@ -50,7 +58,8 @@ export const WordPage = () => {
 
   return (
     <Container>
-      <WordList words={data} />
+      <SearchAndFilters onChange={setFilters} />
+      <WordList words={filteredWords} />
 
       {/* Boton para agregar nueva nota */}
       <Fab

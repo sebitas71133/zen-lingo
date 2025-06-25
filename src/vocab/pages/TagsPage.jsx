@@ -51,7 +51,9 @@ export const TagsPage = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const totalTags = tagsData?.length;
+  // const totalTags = tagsData?.length;
+
+  const itemsPerPage = 3;
 
   console.log({ selectedTag });
 
@@ -60,7 +62,7 @@ export const TagsPage = () => {
     setPage: setPageTags,
     totalPages: totalPagesTags,
     currentPageData: paginatedTags,
-  } = usePagination(tagsData, totalTags);
+  } = usePagination(tagsData, itemsPerPage);
 
   console.log(paginatedTags);
 
