@@ -17,8 +17,8 @@ import { useGetWordsQuery } from "../../services/wordApi";
 import { useAddTagMutation, useGetTagsQuery } from "../../services/tagsApi";
 import { useWordStore } from "../hooks/useWordStoreQuery";
 
-export const WordList = () => {
-  const { data: words = [], isLoading, isError } = useGetWordsQuery();
+export const WordList = ({ words }) => {
+  // const { data: words = [], isLoading, isError } = useGetWordsQuery();
   console.log(words);
   // const allTags = [...new Set(words.flatMap((w) => w.tags || []))];
 
@@ -33,8 +33,6 @@ export const WordList = () => {
     selectedTags: [],
     onlyLearned: false,
   });
-
-  console.log({ filters });
 
   const filteredWords = words.filter((word) => {
     const matchesSearch =
@@ -87,35 +85,6 @@ export const WordList = () => {
   useEffect(() => {
     if (!openForm) setWordToEdit(null);
   }, [openForm]);
-
-  if (isLoading) {
-    return (
-      <Stack alignItems="center" mt={4}>
-        <CircularProgress />
-        <Typography>Cargando palabras...</Typography>
-      </Stack>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Typography
-        variant="h6"
-        color="error"
-        sx={{ mt: 3, textAlign: "center" }}
-      >
-        Ocurrió un error al cargar las palabras 😢
-      </Typography>
-    );
-  }
-
-  if (!words.length) {
-    return (
-      <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
-        No hay palabras guardadas todavía 😅
-      </Typography>
-    );
-  }
 
   return (
     <Box sx={{ mt: 3 }}>
