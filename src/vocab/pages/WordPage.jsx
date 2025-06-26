@@ -13,16 +13,16 @@ import { WordList } from "../components/WordList";
 import { SearchAndFilters } from "../components/SearchAndFilters";
 import { useGetWordsQuery } from "../../services/wordApi";
 import { useFilteredWords } from "../hooks/useFilteredWords";
+import { useDispatch, useSelector } from "react-redux";
+import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 
 export const WordPage = () => {
-  const [openForm, setOpenForm] = useState(false);
+  // const [openForm, setOpenForm] = useState(false);
 
-  const [filters, setFilters] = useState({
-    searchText: "",
-    type: "",
-    selectedTags: [],
-    onlyLearned: false,
-  });
+  const dispatch = useDispatch();
+  const { wordForm: openForm } = useSelector((state) => state.ui.dialogs);
+
+  const filters = useSelector((state) => state.wordFilter);
 
   const { data: words = [], isLoading, isError } = useGetWordsQuery();
   const filteredWords = useFilteredWords(words, filters);
@@ -48,29 +48,31 @@ export const WordPage = () => {
     );
   }
 
-  if (!words.length) {
-    return (
-      <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
-        No hay palabras guardadas todavía 😅
-      </Typography>
-    );
-  }
-
   return (
     <Container>
-      <SearchAndFilters onChange={setFilters} />
-      <WordList words={filteredWords} />
+      <SearchAndFilters />
+      {words.length === 0 ? (
+        <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
+          No hay palabras guardadas todavía 😅
+        </Typography>
+      ) : (
+        <WordList words={filteredWords} />
+      )}
 
       {/* Boton para agregar nueva nota */}
       <Fab
         color="primary"
-        onClick={() => setOpenForm(true)}
-        sx={{ position: "fixed", bottom: 24, right: 24 }}
+        onClick={() => dispatch(openDialog("wordForm"))}
+        sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 100 }}
       >
         <AddIcon />
       </Fab>
 
-      <WordFormDialog open={openForm} onClose={() => setOpenForm(false)} />
+      <WordFormDialog
+        open={openForm}
+        onClose={() => dispatch(closeDialog("wordForm"))}
+        initialData={null}
+      />
     </Container>
   );
 };

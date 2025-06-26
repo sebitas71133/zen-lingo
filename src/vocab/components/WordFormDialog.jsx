@@ -22,7 +22,7 @@ const types = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
 
 export const WordFormDialog = ({ open, onClose, initialData }) => {
   const { createWord, updateWordById, isUpdating, isAdding } = useWordStore();
-
+  console.log({ initialData });
   const {
     control,
     handleSubmit,

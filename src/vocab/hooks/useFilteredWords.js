@@ -1,12 +1,5 @@
 import { useMemo } from "react";
 
-// interface FilterOptions {
-//   searchText: string;
-//   type: string;
-//   selectedTags: string[];
-//   onlyLearned: boolean;
-// }
-
 export const useFilteredWords = (words, filters) => {
   return useMemo(() => {
     return words.filter((word) => {
@@ -23,9 +16,10 @@ export const useFilteredWords = (words, filters) => {
       const matchesTags =
         filters.selectedTags.length === 0 ||
         filters.selectedTags.every((tag) =>
-          word.tags?.map((e) => e.name).includes(tag)
+          word.tags?.map((e) => e.name).includes(tag.name)
         );
 
+      console.log({ matchesTags });
       const matchesLearned = !filters.onlyLearned || word.isLearned;
 
       return matchesSearch && matchesType && matchesTags && matchesLearned;

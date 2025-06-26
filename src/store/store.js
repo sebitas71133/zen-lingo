@@ -7,6 +7,8 @@ import { wordReducer } from "./slices/wordSlice";
 import { tagReducer } from "./slices/tagSlice";
 import { wordApi } from "../services/wordApi";
 import { tagsApi } from "../services/tagsApi";
+import { wordFilterReducer } from "./slices/wordFilterSlice";
+import { uiReducer } from "./slices/uiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +18,8 @@ export const store = configureStore({
     theme: themeReducer,
     word: wordReducer,
     tags: tagReducer,
+    wordFilter: wordFilterReducer,
+    ui: uiReducer,
     [wordApi.reducerPath]: wordApi.reducer,
     [tagsApi.reducerPath]: tagsApi.reducer,
   },

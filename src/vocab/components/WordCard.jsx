@@ -12,6 +12,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { wordTypeColors } from "../utils/wordTypes";
 
 export const WordCard = ({
   word,
@@ -30,15 +31,24 @@ export const WordCard = ({
     isLearned,
   } = word;
 
+  const typeColor = wordTypeColors[type] || "#64b5f6";
+
   console.log({ word });
 
   return (
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: isLearned ? "success.light" : "background.paper",
-        borderColor: isLearned ? "success.main" : "primary.main",
+        backgroundColor: isLearned ? "success.light" : `${typeColor}20`, // color con transparencia
+        borderColor: isLearned ? "success.main" : typeColor,
         mb: 2,
+        transition: "0.3s",
+        boxShadow: `0 0 10px ${typeColor}40`, // sombra ligera basada en el tipo
+
+        "&:hover": {
+          boxShadow: `0 0 15px ${typeColor}66`,
+        },
+        borderLeft: `6px solid ${typeColor}`,
       }}
     >
       <CardContent>
@@ -87,8 +97,12 @@ export const WordCard = ({
                 key={tag.id}
                 label={tag.name}
                 size="small"
-                color="secondary"
                 variant="outlined"
+                sx={{
+                  color: tag.color,
+                  borderColor: tag.color,
+                  backgroundColor: `${tag.color}20`, // opcional: color con transparencia
+                }}
               />
             ))}
           </Stack>

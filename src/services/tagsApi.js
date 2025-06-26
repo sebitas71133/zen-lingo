@@ -46,7 +46,7 @@ export const tagsApi = createApi({
           const snapshot = await getDocs(q);
 
           if (snapshot.empty) {
-            await addDoc(tagsRef, { name: tag.name }); // ✅ guardar correctamente
+            await addDoc(tagsRef, { name: tag.name, color: tag.color }); // ✅ guardar correctamente
             return { data: { success: true } };
           }
 
@@ -59,11 +59,11 @@ export const tagsApi = createApi({
     }),
 
     updateTag: builder.mutation({
-      async queryFn({ id, name }, { getState }) {
+      async queryFn({ id, name, color }, { getState }) {
         try {
           const { uid } = getState().auth;
           const ref = doc(Firestore, `users/${uid}/tags/${id}`);
-          await updateDoc(ref, { name });
+          await updateDoc(ref, { name, color });
           return { data: { success: true } };
         } catch (error) {
           return { error };

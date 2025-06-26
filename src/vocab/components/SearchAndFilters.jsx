@@ -7,38 +7,25 @@ import {
   Chip,
   Autocomplete,
 } from "@mui/material";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useGetTagsQuery } from "../../services/tagsApi";
 
-const wordTypes = ["Sustantivo", "Verbo", "Adjetivo", "Adverbio"];
+import { wordTypeColors } from "../utils/wordTypes";
 
-export const SearchAndFilters = ({ onChange }) => {
-  const [searchText, setSearchText] = useState("");
-  const [type, setType] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [onlyLearned, setOnlyLearned] = useState(false);
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setOnlyLearned,
+  setSearchText,
+  setSelectedTags,
+  setType,
+} from "../../store/slices/wordFilterSlice";
+import { useTagStore } from "../hooks/useTagStore";
 
-  const { uid } = useSelector((state) => state.auth);
+export const SearchAndFilters = () => {
+  const dispatch = useDispatch();
+  const { searchText, type, selectedTags, onlyLearned } = useSelector(
+    (state) => state.wordFilter
+  );
 
-  const { data: tags = [], isLoading } = useGetTagsQuery(undefined, {
-    skip: !uid,
-  });
-
-  const emitChange = (newFilters) => {
-    onChange({
-      searchText,
-      type,
-      selectedTags,
-      onlyLearned,
-      ...newFilters,
-    });
-  };
-
-  const handleTagChange = (event, newValue) => {
-    setSelectedTags(newValue);
-    emitChange({ selectedTags: newValue.map((t) => t.name) });
-  };
+  const { tags = [], isLoading } = useTagStore();
 
   return (
     <Box
@@ -55,10 +42,7 @@ export const SearchAndFilters = ({ onChange }) => {
         variant="outlined"
         size="small"
         value={searchText}
-        onChange={(e) => {
-          setSearchText(e.target.value);
-          emitChange({ searchText: e.target.value });
-        }}
+        onChange={(e) => dispatch(setSearchText(e.target.value))}
       />
 
       <TextField
@@ -67,16 +51,22 @@ export const SearchAndFilters = ({ onChange }) => {
         variant="outlined"
         size="small"
         value={type}
-        onChange={(e) => {
-          setType(e.target.value);
-          emitChange({ type: e.target.value });
-        }}
+        onChange={(e) => dispatch(setType(e.target.value))}
         sx={{ minWidth: 140 }}
       >
         <MenuItem value="">Todos</MenuItem>
-        {wordTypes.map((t) => (
-          <MenuItem key={t} value={t}>
-            {t}
+        {Object.entries(wordTypeColors).map(([type, color]) => (
+          <MenuItem
+            key={type}
+            value={type}
+            sx={{
+              "&:hover": {
+                backgroundColor: color,
+                opacity: 0.85,
+              },
+            }}
+          >
+            {type}
           </MenuItem>
         ))}
       </TextField>
@@ -86,7 +76,7 @@ export const SearchAndFilters = ({ onChange }) => {
         options={tags}
         getOptionLabel={(option) => option.name}
         value={selectedTags}
-        onChange={handleTagChange}
+        onChange={(event, newValue) => dispatch(setSelectedTags(newValue))}
         loading={isLoading}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
@@ -108,10 +98,7 @@ export const SearchAndFilters = ({ onChange }) => {
         control={
           <Checkbox
             checked={onlyLearned}
-            onChange={(e) => {
-              setOnlyLearned(e.target.checked);
-              emitChange({ onlyLearned: e.target.checked });
-            }}
+            onChange={(e) => dispatch(setOnlyLearned(e.target.checked))}
           />
         }
         label="Solo aprendidas"

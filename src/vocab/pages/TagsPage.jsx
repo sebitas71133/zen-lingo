@@ -10,6 +10,8 @@ import {
   Tooltip,
   Paper,
   Stack,
+  Fab,
+  Container,
 } from "@mui/material";
 import {
   NoteAdd as NoteAddIcon,
@@ -18,40 +20,50 @@ import {
 } from "@mui/icons-material";
 import Pagination from "@mui/material/Pagination";
 import Swal from "sweetalert2";
-import { useOutletContext } from "react-router-dom";
-import {
-  useAddTagMutation,
-  useDeleteTagMutation,
-  useGetTagsQuery,
-  useUpdateTagMutation,
-} from "../../services/tagsApi";
+
+import AddIcon from "@mui/icons-material/Add";
+
 import { usePagination } from "../hooks/usePagination";
+import { useTagStore } from "../hooks/useTagStore";
 
 const tagColors = [
-  "#E57373",
-  "#64B5F6",
-  "#81C784",
-  "#FFD54F",
-  "#BA68C8",
-  "#4DB6AC",
-  "#FF8A65",
-  "#A1887F",
+  "#E57373", // Rojo suave
+  "#F06292", // Rosa
+  "#BA68C8", // Púrpura
+  "#9575CD", // Lavanda
+  "#64B5F6", // Azul claro
+  "#4FC3F7", // Celeste
+  "#4DD0E1", // Turquesa
+  "#4DB6AC", // Verde azulado
+  "#81C784", // Verde
+  "#AED581", // Verde lima
+  "#DCE775", // Lima claro
+  "#FFD54F", // Amarillo
+  "#FFB74D", // Naranja
+  "#FF8A65", // Naranja coral
+  "#A1887F", // Marrón suave
+  "#90A4AE", // Gris azulado
+  "#B0BEC5", // Gris claro
+  "#F48FB1", // Rosa claro
+  "#CE93D8", // Lila
+  "#FFF176", // Amarillo suave
+  "#A5D6A7", // Verde pastel
+  "#81D4FA", // Azul pastel
+  "#E1BEE7", // Lavanda claro
+  "#B39DDB", // Morado grisáceo
 ];
 
 export const TagsPage = () => {
-  // const { totalTags } = useOutletContext();
-
-  const { data: tagsData = [], isLoading } = useGetTagsQuery();
-  const [addTag] = useAddTagMutation();
-  const [updateTag] = useUpdateTagMutation();
-  const [deleteTag] = useDeleteTagMutation();
-
-  console.log(tagsData);
+  const {
+    tags: tagsData = [],
+    isLoading,
+    createTag,
+    updateTagById,
+    deleteTagById,
+  } = useTagStore();
 
   const [selectedTag, setSelectedTag] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // const totalTags = tagsData?.length;
 
   const itemsPerPage = 3;
 
@@ -66,7 +78,7 @@ export const TagsPage = () => {
 
   console.log(paginatedTags);
 
-  const handleOpenModal = (tag = { name: "" }) => {
+  const handleOpenModal = (tag = { name: "", color: tagColors[0] }) => {
     setSelectedTag(tag);
     setIsModalOpen(true);
   };
@@ -88,14 +100,14 @@ export const TagsPage = () => {
 
     try {
       if (selectedTag.id) {
-        await updateTag(selectedTag).unwrap();
+        await updateTagById(selectedTag.id, selectedTag);
         Swal.fire(
           "Actualizado",
           "Etiqueta actualizada correctamente",
           "success"
         );
       } else {
-        await addTag(selectedTag).unwrap();
+        await createTag(selectedTag);
         Swal.fire("Creado", "Etiqueta creada correctamente", "success");
       }
       handleCloseModal();
@@ -122,7 +134,7 @@ export const TagsPage = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await deleteTag(tag.id).unwrap();
+        await deleteTagById(tag.id);
         Swal.fire("Eliminado", "Etiqueta eliminada correctamente", "success");
       } catch (err) {
         Swal.fire("Error", err.data?.error || "No se pudo eliminar", "error");
@@ -135,38 +147,22 @@ export const TagsPage = () => {
   }
 
   return (
-    <Box>
-      {/* Título y botón de creación */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
-      >
-        <Typography
-          variant="h4"
-          component="h1"
-          display="flex"
-          alignItems="center"
-        >
-          <LabelIcon sx={{ mr: 1 }} color="primary" />
-          Etiquetas
-        </Typography>
+    <Container>
+      {/* botón de creación */}
 
-        <Button
-          variant="contained"
-          startIcon={<NoteAddIcon />}
-          onClick={() => handleOpenModal()}
-        >
-          Nueva etiqueta
-        </Button>
-      </Box>
+      <Fab
+        color="primary"
+        onClick={() => handleOpenModal()}
+        sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 100 }}
+      >
+        <AddIcon />
+      </Fab>
 
       {/* Lista de etiquetas */}
       <Box display="flex" flexWrap="wrap" gap={1.5}>
         {paginatedTags?.length > 0 ? (
           paginatedTags.map((tag, i) => {
-            const color = tagColors[i % tagColors.length];
+            const color = tag.color || tagColors[i % tagColors.length];
             return (
               <Chip
                 key={tag.id}
@@ -240,6 +236,37 @@ export const TagsPage = () => {
             }
             sx={{ mb: 2 }}
           />
+          <Typography variant="subtitle1" sx={{ mb: 1 }}>
+            Color
+          </Typography>
+          <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
+            {tagColors.map((color) => (
+              <Box
+                key={color}
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  backgroundColor: color,
+                  border:
+                    selectedTag?.color === color
+                      ? "3px solid #000"
+                      : "2px solid transparent",
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  "&:hover": {
+                    opacity: 0.8,
+                  },
+                }}
+                onClick={() =>
+                  setSelectedTag((prev) => ({
+                    ...prev,
+                    color,
+                  }))
+                }
+              />
+            ))}
+          </Box>
           <Box display="flex" justifyContent="flex-end" gap={1}>
             <Button onClick={handleCloseModal}>Cancelar</Button>
             <Button variant="contained" onClick={handleSaveTag}>
@@ -260,6 +287,6 @@ export const TagsPage = () => {
           />
         </Stack>
       )}
-    </Box>
+    </Container>
   );
 };
