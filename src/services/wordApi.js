@@ -43,6 +43,7 @@ export const wordApi = createApi({
             {
               ...wordData,
               isLearned: false,
+              isFavorite: false,
             }
           );
           return { data: { id: ref.id, ...wordData, isLearned: false } };

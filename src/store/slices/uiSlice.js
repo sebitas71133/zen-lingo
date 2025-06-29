@@ -4,6 +4,7 @@ const initialState = {
   dialogs: {
     wordForm: false,
     wordEditForm: false,
+    wordShowForm: false,
     deleteConfirm: false,
     // puedes agregar más si es necesario
   },

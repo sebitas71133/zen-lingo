@@ -1,4 +1,4 @@
-import { Box, Pagination, Stack } from "@mui/material";
+import { Box, Grid, Pagination, Stack } from "@mui/material";
 import { useState, useEffect } from "react";
 import { WordCard } from "./WordCard";
 
@@ -11,7 +11,9 @@ import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import Swal from "sweetalert2";
 
 export const WordList = ({ words }) => {
-  const itemsPerPage = 5;
+  // const itemsPerPage = 6;
+
+  const { itemsPerPage = 6 } = useSelector((state) => state.wordFilter);
 
   const {
     currentPageData: currentWords,
@@ -22,8 +24,6 @@ export const WordList = ({ words }) => {
 
   const dispatch = useDispatch();
   const { wordEditForm: openForm } = useSelector((state) => state.ui.dialogs);
-
-  console.log({ openForm });
 
   const { deleteWordById, updateWordById, isUpdating } = useWordStore();
 
@@ -71,6 +71,17 @@ export const WordList = ({ words }) => {
       console.error("Error al actualizar el estado de 'learned':", error);
     }
   };
+
+  const handleToggleFavorite = async (word) => {
+    try {
+      await updateWordById(word.id, {
+        ...word,
+        isFavorite: !word.isFavorite ?? false, // alterna el estado
+      });
+    } catch (error) {
+      console.error("Error al actualizar el estado de 'learned':", error);
+    }
+  };
   // Reset form on close
   useEffect(() => {
     if (!openForm) setWordToEdit(null);
@@ -78,18 +89,28 @@ export const WordList = ({ words }) => {
 
   return (
     <Box sx={{ mt: 3 }}>
-      <Stack spacing={2}>
+      <Grid container spacing={2}>
         {currentWords.map((word) => (
-          <WordCard
+          <Grid
+            item
             key={word.id}
-            word={word}
-            onEdit={() => handleEdit(word)}
-            onDelete={() => handleDelete(word)}
-            onToggleLearned={() => handleToggleLearned(word)}
-            isUpdating={isUpdating}
-          />
+            xs={12} // 1 por fila en móviles
+            sm={6} // 2 por fila en pantallas ≥600px
+            // md={4} // 3 por fila en pantallas ≥900px
+            // lg={3} // 4 por fila en pantallas ≥1200px
+            // sx={{ display: "flex" }}
+          >
+            <WordCard
+              word={word}
+              onEdit={() => handleEdit(word)}
+              onDelete={() => handleDelete(word)}
+              onToggleLearned={() => handleToggleLearned(word)}
+              onToggleFavorite={() => handleToggleFavorite(word)}
+              isUpdating={isUpdating}
+            />
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
 
       {totalPages > 1 && (
         <Stack mt={4} alignItems="center">

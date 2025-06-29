@@ -15,6 +15,7 @@ import { useGetWordsQuery } from "../../services/wordApi";
 import { useFilteredWords } from "../hooks/useFilteredWords";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
+import { SeedWords } from "../../seed/SeedWords";
 
 export const WordPage = () => {
   // const [openForm, setOpenForm] = useState(false);
@@ -26,6 +27,8 @@ export const WordPage = () => {
 
   const { data: words = [], isLoading, isError } = useGetWordsQuery();
   const filteredWords = useFilteredWords(words, filters);
+
+  console.log({ words });
 
   if (isLoading) {
     return (
@@ -51,6 +54,7 @@ export const WordPage = () => {
   return (
     <Container>
       <SearchAndFilters />
+      {/* <SeedWords></SeedWords> */}
       {words.length === 0 ? (
         <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
           No hay palabras guardadas todavía 😅

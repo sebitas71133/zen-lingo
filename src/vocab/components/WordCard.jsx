@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardActions,
   Typography,
   IconButton,
   Chip,
@@ -10,15 +9,22 @@ import {
   CircularProgress,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import StarIcon from "@mui/icons-material/Star";
 import { wordTypeColors } from "../utils/wordTypes";
+import { formattedDate } from "../utils/formatedDate";
+import { WordCardActions } from "./WordCardActions";
+import { WordViewDialog } from "./WordViewDialog";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const WordCard = ({
   word,
   onEdit,
   onDelete,
   onToggleLearned,
+  onToggleFavorite,
   isUpdating,
 }) => {
   const {
@@ -29,70 +35,127 @@ export const WordCard = ({
     examples = [],
     tags = [],
     isLearned,
+    isFavorite,
+    createdAt,
+    updatedAt,
   } = word;
 
-  const typeColor = wordTypeColors[type] || "#64b5f6";
-
   console.log({ word });
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpen = (e) => {
+    e.stopPropagation();
+    setIsDialogOpen(true);
+  };
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    setIsDialogOpen(false);
+  };
+
+  const typeColor = wordTypeColors[type] || "#64b5f6";
 
   return (
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: isLearned ? "success.light" : `${typeColor}20`, // color con transparencia
-        borderColor: isLearned ? "success.main" : typeColor,
+        backgroundColor: isLearned ? "#2e7d3277" : `${typeColor}15`,
+        borderColor: isLearned ? "#388e3c" : typeColor, // success.dark o tono más fuerte
         mb: 2,
         transition: "0.3s",
-        boxShadow: `0 0 10px ${typeColor}40`, // sombra ligera basada en el tipo
-
+        boxShadow: `0 0 10px ${typeColor}30`,
         "&:hover": {
-          boxShadow: `0 0 15px ${typeColor}66`,
+          boxShadow: `0 0 15px ${typeColor}55`,
         },
         borderLeft: `6px solid ${typeColor}`,
       }}
     >
       <CardContent>
+        {/* Título + botones */}
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6">
+          <Typography
+            variant="h6"
+            sx={{ textTransform: "capitalize", fontWeight: "bold" }}
+          >
             {term} — <b>{translation}</b>
           </Typography>
 
-          <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
-            <IconButton disabled={isUpdating} onClick={onToggleLearned}>
-              {isUpdating ? (
-                <CircularProgress size={20} />
-              ) : (
-                <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
-              )}
-            </IconButton>
-          </Tooltip>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mr: 3 }}>
+            <Tooltip title="Ver detalles">
+              <IconButton onClick={(e) => handleOpen(e)}>
+                <VisibilityIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
+              <IconButton
+                disabled={isUpdating}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleLearned();
+                }}
+              >
+                {isUpdating ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
+                )}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={isFavorite ? "Favorito" : "Marcar como favorito"}>
+              <IconButton
+                disabled={isUpdating}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite();
+                }}
+              >
+                {isUpdating ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <StarIcon color={isFavorite ? "warning" : "disabled"} />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Stack>
         </Stack>
 
-        {type && (
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Tipo: {type}
-          </Typography>
-        )}
+        {/* Metadatos */}
+        <Stack direction="row" spacing={2} sx={{ mt: 1 }} flexWrap="wrap">
+          {type && (
+            <Typography variant="subtitle2" color="text.secondary">
+              Tipo: <b>{type}</b>
+            </Typography>
+          )}
+          {createdAt && (
+            <Typography variant="caption" color="text.secondary">
+              Actualizado el: {formattedDate(updatedAt)}
+            </Typography>
+          )}
+        </Stack>
 
+        {/* Definición */}
         {definition && (
-          <Typography variant="body1" sx={{ mb: 1 }}>
+          <Typography variant="body1" sx={{ mt: 1 }}>
             {definition}
           </Typography>
         )}
 
+        {/* Ejemplo */}
         {examples.length > 0 && (
-          <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+          <Typography variant="body2" sx={{ fontStyle: "italic", mt: 1 }}>
             Ejemplo: {examples[0]}
           </Typography>
         )}
 
+        {/* Tags */}
         {tags.length > 0 && (
-          <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mt: 1 }}>
-            {tags.map((tag, i) => (
+          <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mt: 2 }}>
+            {tags.map((tag) => (
               <Chip
                 key={tag.id}
                 label={tag.name}
@@ -101,7 +164,8 @@ export const WordCard = ({
                 sx={{
                   color: tag.color,
                   borderColor: tag.color,
-                  backgroundColor: `${tag.color}20`, // opcional: color con transparencia
+                  backgroundColor: `${tag.color}20`,
+                  textTransform: "capitalize",
                 }}
               />
             ))}
@@ -109,18 +173,15 @@ export const WordCard = ({
         )}
       </CardContent>
 
-      <CardActions>
-        <Tooltip title="Editar">
-          <IconButton onClick={onEdit}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Eliminar">
-          <IconButton onClick={onDelete}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </CardActions>
+      {/* Acciones (Editar / Eliminar) */}
+      <WordCardActions onEdit={onEdit} onDelete={onDelete} />
+
+      {/* Dialogo de vista */}
+      <WordViewDialog
+        open={isDialogOpen}
+        onClose={(e) => handleClose(e)}
+        wordData={word}
+      />
     </Card>
   );
 };

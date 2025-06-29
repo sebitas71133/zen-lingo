@@ -5,6 +5,10 @@ const initialState = {
   type: "",
   selectedTags: [],
   onlyLearned: false,
+  onlyFavorite: false,
+  sortBy: "alphabetical", // 'none' | 'alphabetical' | 'createdAt' | etc
+  sortOrder: "asc", // 'asc' | 'desc'
+  itemsPerPage: 6,
 };
 
 const wordFilterSlice = createSlice({
@@ -23,6 +27,19 @@ const wordFilterSlice = createSlice({
     setOnlyLearned: (state, action) => {
       state.onlyLearned = action.payload;
     },
+    setOnlyFavorite: (state, action) => {
+      state.onlyFavorite = action.payload;
+    },
+    setSortBy: (state, action) => {
+      state.sortBy = action.payload;
+    },
+    setSortOrder: (state, action) => {
+      state.sortOrder = action.payload;
+    },
+    setItemPerPage: (state, action) => {
+      state.itemsPerPage = action.payload;
+    },
+
     resetFilters: () => initialState,
   },
 });
@@ -32,7 +49,11 @@ export const {
   setType,
   setSelectedTags,
   setOnlyLearned,
+  setOnlyFavorite,
   resetFilters,
+  setSortBy,
+  setSortOrder,
+  setItemPerPage,
 } = wordFilterSlice.actions;
 
 export const wordFilterReducer = wordFilterSlice.reducer;

@@ -2,27 +2,54 @@ import { useMemo } from "react";
 
 export const useFilteredWords = (words, filters) => {
   return useMemo(() => {
-    return words.filter((word) => {
-      const matchesSearch =
-        word.word?.toLowerCase().includes(filters.searchText.toLowerCase()) ||
-        word.translation
-          ?.toLowerCase()
-          .includes(filters.searchText.toLowerCase());
+    let filtered = [...words];
 
-      const matchesType =
-        !filters.type ||
-        word.type?.toLowerCase() === filters.type.toLowerCase();
+    // Filtrar
+    if (filters.searchText) {
+      filtered = filtered.filter((word) =>
+        word.word.toLowerCase().includes(filters.searchText.toLowerCase())
+      );
+    }
 
-      const matchesTags =
-        filters.selectedTags.length === 0 ||
-        filters.selectedTags.every((tag) =>
-          word.tags?.map((e) => e.name).includes(tag.name)
-        );
+    if (filters.type) {
+      filtered = filtered.filter(
+        (word) => word.type?.toLowerCase() === filters.type.toLowerCase()
+      );
+    }
 
-      console.log({ matchesTags });
-      const matchesLearned = !filters.onlyLearned || word.isLearned;
+    if (filters.onlyLearned) {
+      filtered = filtered.filter((word) => word.isLearned);
+    }
 
-      return matchesSearch && matchesType && matchesTags && matchesLearned;
-    });
+    if (filters.onlyFavorite) {
+      filtered = filtered.filter((word) => word.isFavorite);
+    }
+
+    if (filters.selectedTags.length > 0) {
+      const selectedTagNames = filters.selectedTags.map((tag) => tag.name);
+
+      filtered = filtered.filter((word) =>
+        word.tags?.some((tag) => selectedTagNames.includes(tag.name))
+      );
+    }
+
+    // Ordenar
+    if (filters.sortBy === "alphabetical") {
+      filtered.sort((a, b) =>
+        filters.sortOrder === "asc"
+          ? a.word.localeCompare(b.word)
+          : b.word.localeCompare(a.word)
+      );
+    }
+
+    if (filters.sortBy === "createdAt") {
+      filtered.sort((a, b) =>
+        filters.sortOrder === "asc"
+          ? new Date(a.createdAt) - new Date(b.createdAt)
+          : new Date(b.createdAt) - new Date(a.createdAt)
+      );
+    }
+
+    return filtered;
   }, [words, filters]);
 };

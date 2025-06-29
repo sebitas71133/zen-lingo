@@ -10,6 +10,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
+  useTheme,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -17,9 +19,8 @@ import {
   LabelOutlined,
   NotesOutlined,
   LogoutOutlined,
+  BuildCircleOutlined,
 } from "@mui/icons-material";
-import BuildIcon from "@mui/icons-material/Build";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +28,7 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -45,65 +47,55 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
         justifyContent: "space-between",
       }}
     >
-      {/* Parte superior */}
+      {/* Top Section */}
       <Box>
-        <Toolbar sx={{ borderRight: 1, borderColor: "divider" }}>
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 3,
-              justifyContent: "flex-end",
-            }}
-          >
-            <AccountCircle sx={{ color: "text.primary" }} />
-            {displayName}
-          </Typography>
+        <Toolbar sx={{ px: 2, py: 3 }}>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <AccountCircle fontSize="large" sx={{ color: "primary.main" }} />
+            <Box>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                sx={{ color: "text.primary" }}
+              >
+                {displayName}
+              </Typography>
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                Logged in
+              </Typography>
+            </Box>
+          </Stack>
         </Toolbar>
-        <Divider sx={{ bgcolor: "divider" }} />
+        <Divider />
 
         <List>
           <ListItemButton onClick={() => navigate("/app")}>
             <ListItemIcon>
               <NotesOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
-            <ListItemText primary="Word" />
+            <ListItemText primary="Notes" />
           </ListItemButton>
 
-          {/* <ListItemButton onClick={() => navigate("/app/category")}>
-            <ListItemIcon>
-              <CategoryOutlined sx={{ color: "text.primary" }} />
-            </ListItemIcon>
-            <ListItemText primary="Categories" />
-          </ListItemButton> */}
-
-          {/* <ListItemButton onClick={() => navigate("/app/word")}>
-            <ListItemIcon>
-              <LabelOutlined sx={{ color: "text.primary" }} />
-            </ListItemIcon>
-            <ListItemText primary="Word" />
-          </ListItemButton> */}
-
-          {/* <ListItemButton onClick={() => navigate("/app/favorite")}>
-            <ListItemIcon>
-              <LabelOutlined sx={{ color: "text.primary" }} />
-            </ListItemIcon>
-            <ListItemText primary="Favorite" />
-          </ListItemButton> */}
-        </List>
-      </Box>
-
-      <Box>
-        <Divider />
-        <List>
           <ListItemButton onClick={() => navigate("/app/tags")}>
             <ListItemIcon>
-              <BuildIcon sx={{ color: "text.primary" }} />
+              <LabelOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
             <ListItemText primary="Tags" />
           </ListItemButton>
+
+          <ListItemButton onClick={() => navigate("/app/tools")}>
+            <ListItemIcon>
+              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+            </ListItemIcon>
+            <ListItemText primary="Tools" />
+          </ListItemButton>
+        </List>
+      </Box>
+
+      {/* Bottom Section */}
+      <Box>
+        <Divider />
+        <List>
           <ListItemButton onClick={handleLogout}>
             <ListItemIcon>
               <LogoutOutlined sx={{ color: "text.primary" }} />
@@ -139,38 +131,22 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
           flexShrink: { sm: 0 },
         }}
       >
-        {isLargeScreen ? (
-          <Drawer
-            variant="permanent"
-            open
-            sx={{
-              "& .MuiDrawer-paper": {
-                width: drawerWidth,
-                boxSizing: "border-box",
-                bgcolor: "background.paper",
-                borderRight: "none",
-              },
-            }}
-          >
-            {drawerContent}
-          </Drawer>
-        ) : (
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              "& .MuiDrawer-paper": {
-                width: drawerWidth,
-                boxSizing: "border-box",
-                bgcolor: "background.paper",
-              },
-            }}
-          >
-            {drawerContent}
-          </Drawer>
-        )}
+        <Drawer
+          variant={isLargeScreen ? "permanent" : "temporary"}
+          open={isLargeScreen ? true : mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              bgcolor: "background.paper",
+              borderRight: "none",
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
       </Box>
     </>
   );
