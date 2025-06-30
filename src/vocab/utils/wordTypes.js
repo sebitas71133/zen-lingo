@@ -4,3 +4,8 @@ export const wordTypeColors = {
   adjetivo: "#ba68c8", // violeta
   adverbio: "#ffb74d", // naranja
 };
+
+export const phraseTypeColors = {
+  phrases: "#64b5f6", // azul
+  idioms: "#81c784", // verde
+};

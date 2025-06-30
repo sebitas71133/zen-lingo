@@ -83,11 +83,11 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
             <ListItemText primary="Tags" />
           </ListItemButton>
 
-          <ListItemButton onClick={() => navigate("/app/tools")}>
+          <ListItemButton onClick={() => navigate("/app/phrase")}>
             <ListItemIcon>
               <BuildCircleOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
-            <ListItemText primary="Tools" />
+            <ListItemText primary="Phrase" />
           </ListItemButton>
         </List>
       </Box>

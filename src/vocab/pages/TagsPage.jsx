@@ -12,16 +12,16 @@ import {
   Stack,
   Fab,
   Container,
+  Grid,
+  MenuItem,
+  Collapse,
 } from "@mui/material";
-import {
-  NoteAdd as NoteAddIcon,
-  Delete as DeleteIcon,
-  Label as LabelIcon,
-} from "@mui/icons-material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 import Pagination from "@mui/material/Pagination";
 import Swal from "sweetalert2";
 
 import AddIcon from "@mui/icons-material/Add";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 import { usePagination } from "../hooks/usePagination";
 import { useTagStore } from "../hooks/useTagStore";
@@ -65,18 +65,36 @@ export const TagsPage = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const itemsPerPage = 3;
+  const [searchName, setSearchName] = useState("");
 
-  console.log({ selectedTag });
+  const [order, setOrder] = useState("asc");
+
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  let filtered = [...tagsData];
+
+  if (searchName) {
+    filtered = filtered.filter((tag) =>
+      tag.name.toLowerCase().includes(searchName.toLowerCase())
+    );
+  }
+
+  if (order) {
+    filtered.sort((a, b) =>
+      order === "asc"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
+  }
 
   const {
     page: pageTags,
     setPage: setPageTags,
     totalPages: totalPagesTags,
     currentPageData: paginatedTags,
-  } = usePagination(tagsData, itemsPerPage);
-
-  console.log(paginatedTags);
+  } = usePagination(filtered, itemsPerPage);
 
   const handleOpenModal = (tag = { name: "", color: tagColors[0] }) => {
     setSelectedTag(tag);
@@ -148,7 +166,55 @@ export const TagsPage = () => {
 
   return (
     <Container>
-      {/* botón de creación */}
+      {/* FILTERS */}
+      <Collapse in={showFilters}>
+        <Box sx={{ mb: 5 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="Buscar"
+                size="small"
+                fullWidth
+                variant="outlined"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+              ></TextField>
+            </Grid>
+
+            <Grid item xs={6} sm={4} md={2}>
+              <TextField
+                label="Dirección"
+                select
+                size="small"
+                fullWidth
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+              >
+                <MenuItem value="asc">Ascendente</MenuItem>
+                <MenuItem value="desc">Descendente</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={6} sm={4} md={2}>
+              <Tooltip title="Cantidad de palabras por página">
+                <TextField
+                  label="Por página"
+                  select
+                  size="small"
+                  fullWidth
+                  value={itemsPerPage}
+                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                >
+                  {[3, 6, 9, 12, 15].map((num) => (
+                    <MenuItem key={num} value={num}>
+                      {num}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Box>
+      </Collapse>
 
       <Fab
         color="primary"
@@ -158,8 +224,21 @@ export const TagsPage = () => {
         <AddIcon />
       </Fab>
 
+      <Fab
+        color="secondary"
+        onClick={() => setShowFilters(!showFilters)}
+        sx={{
+          position: "fixed",
+          bottom: 94, // un poco más arriba que el botón de crear
+          right: 24,
+          zIndex: 100,
+        }}
+      >
+        <FilterListIcon />
+      </Fab>
+
       {/* Lista de etiquetas */}
-      <Box display="flex" flexWrap="wrap" gap={1.5}>
+      <Box display="flex" flexWrap="wrap" gap={1.5} mt={2}>
         {paginatedTags?.length > 0 ? (
           paginatedTags.map((tag, i) => {
             const color = tag.color || tagColors[i % tagColors.length];

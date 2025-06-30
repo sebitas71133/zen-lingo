@@ -20,17 +20,17 @@ import LabelIcon from "@mui/icons-material/Label";
 
 const MotionBox = motion(Box);
 
-export const WordViewDialog = ({ open, onClose, wordData }) => {
-  if (!wordData) return null;
+export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
+  if (!phraseData) return null;
 
   const {
-    word,
+    phrase,
     translation,
     type,
-    definition,
+    context,
     examples = [],
     tags = [],
-  } = wordData;
+  } = phraseData;
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -44,7 +44,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
           {/* Palabra y traducción */}
           <Box mb={3}>
             <Typography variant="h4" fontWeight="bold">
-              {word}
+              {phrase}
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1} mt={1}>
               <TranslateIcon fontSize="small" color="primary" />
@@ -68,7 +68,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
           </Box>
 
           {/* Definición */}
-          {definition && (
+          {context && (
             <Box mb={2}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <DescriptionIcon fontSize="small" color="action" />
@@ -76,7 +76,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
                   Definición
                 </Typography>
               </Stack>
-              <Typography sx={{ ml: 4 }}>{definition}</Typography>
+              <Typography sx={{ ml: 4 }}>{context}</Typography>
             </Box>
           )}
 

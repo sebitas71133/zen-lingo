@@ -5,6 +5,8 @@ const initialState = {
     wordForm: false,
     wordEditForm: false,
     wordShowForm: false,
+    phraseForm: false,
+    phraseEditForm: false,
     deleteConfirm: false,
     // puedes agregar más si es necesario
   },

@@ -10,8 +10,10 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
+  Collapse,
+  Fab,
 } from "@mui/material";
-
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { wordTypeColors } from "../utils/wordTypes";
 
 import { useSelector, useDispatch } from "react-redux";

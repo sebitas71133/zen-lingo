@@ -9,6 +9,7 @@ import { wordApi } from "../services/wordApi";
 import { tagsApi } from "../services/tagsApi";
 import { wordFilterReducer } from "./slices/wordFilterSlice";
 import { uiReducer } from "./slices/uiSlice";
+import { phrasesApi } from "../services/phrasesApi";
 
 export const store = configureStore({
   reducer: {
@@ -22,7 +23,12 @@ export const store = configureStore({
     ui: uiReducer,
     [wordApi.reducerPath]: wordApi.reducer,
     [tagsApi.reducerPath]: tagsApi.reducer,
+    [phrasesApi.reducerPath]: phrasesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([wordApi.middleware, tagsApi.middleware]),
+    getDefaultMiddleware().concat([
+      wordApi.middleware,
+      tagsApi.middleware,
+      phrasesApi.middleware,
+    ]),
 });
