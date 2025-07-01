@@ -73,7 +73,7 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
             <ListItemIcon>
               <NotesOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
-            <ListItemText primary="Notes" />
+            <ListItemText primary="Words" />
           </ListItemButton>
 
           <ListItemButton onClick={() => navigate("/app/tags")}>
@@ -87,7 +87,21 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
             <ListItemIcon>
               <BuildCircleOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
-            <ListItemText primary="Phrase" />
+            <ListItemText primary="Phrases" />
+          </ListItemButton>
+
+          <ListItemButton onClick={() => navigate("/app/verbs")}>
+            <ListItemIcon>
+              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+            </ListItemIcon>
+            <ListItemText primary="Verbs" />
+          </ListItemButton>
+
+          <ListItemButton onClick={() => navigate("/app/texts")}>
+            <ListItemIcon>
+              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+            </ListItemIcon>
+            <ListItemText primary="Texts" />
           </ListItemButton>
         </List>
       </Box>

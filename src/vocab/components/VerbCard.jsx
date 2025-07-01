@@ -9,18 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { WordCardActions } from "./WordCardActions";
-
-import { phraseTypeColors } from "../utils/wordTypes";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import StarIcon from "@mui/icons-material/Star";
-import { formattedDate } from "../utils/formatedDate";
-import { PhraseViewDialog } from "./PhraseViewDialog";
 
-export const PhraseCard = ({
-  phrase,
+import { formattedDate } from "../utils/formatedDate";
+import { WordCardActions } from "./WordCardActions";
+import { verbTypeColors } from "../utils/wordTypes";
+import { VerbViewDialog } from "./VerbViewDialog";
+
+export const VerbCard = ({
+  verb,
   onEdit,
   onDelete,
   onToggleLearned,
@@ -28,42 +28,40 @@ export const PhraseCard = ({
   isUpdating,
 }) => {
   const {
-    phrase: term,
+    verb: base,
+    past,
+    participle,
     translation,
     type,
-    context,
+
     examples = [],
     tags = [],
     isLearned,
     isFavorite,
     createdAt,
     updatedAt,
-  } = phrase;
+  } = verb;
 
-  console.log({ phrase });
+  console.log({ verb });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const handleOpen = (e) => {
     e.stopPropagation();
     setIsDialogOpen(true);
   };
-
   const handleClose = (e) => {
     e.stopPropagation();
     setIsDialogOpen(false);
   };
 
-  const typeColor = phraseTypeColors[type] || "#64b5f6";
-
-  console.log({ typeColor });
+  const typeColor = verbTypeColors[type] || "#64b5f6";
 
   return (
     <Card
       variant="outlined"
       sx={{
         backgroundColor: isLearned ? "#2e7d3277" : `${typeColor}15`,
-        borderColor: isLearned ? "#388e3c" : typeColor, // success.dark o tono más fuerte
+        borderColor: isLearned ? "#388e3c" : typeColor,
         mb: 2,
         transition: "0.3s",
         boxShadow: `0 0 10px ${typeColor}30`,
@@ -84,16 +82,16 @@ export const PhraseCard = ({
             variant="h6"
             sx={{ textTransform: "capitalize", fontWeight: "bold" }}
           >
-            {term} — <b>{translation}</b>
+            {base} — <b>{translation}</b>
           </Typography>
 
           <Stack direction="row" alignItems="center" spacing={1} sx={{ mr: 3 }}>
             <Tooltip title="Ver detalles">
-              <IconButton onClick={(e) => handleOpen(e)}>
+              <IconButton onClick={handleOpen}>
                 <VisibilityIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
+            <Tooltip title={isLearned ? "Aprendido" : "Marcar como aprendido"}>
               <IconButton
                 disabled={isUpdating}
                 onClick={(e) => {
@@ -123,7 +121,7 @@ export const PhraseCard = ({
                 )}
               </IconButton>
             </Tooltip>
-            {/* Acciones (Editar / Eliminar) */}
+            {/* Acciones */}
             <WordCardActions onEdit={onEdit} onDelete={onDelete} />
           </Stack>
         </Stack>
@@ -135,29 +133,17 @@ export const PhraseCard = ({
               Tipo: <b>{type}</b>
             </Typography>
           )}
-          {createdAt && (
+          {updatedAt && (
             <Typography variant="caption" color="text.secondary">
               Actualizado el: {formattedDate(updatedAt)}
             </Typography>
           )}
         </Stack>
 
-        {/* Definición */}
-        {context && (
-          <Typography
-            variant="body1"
-            sx={{
-              mt: 1,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {context}
-          </Typography>
-        )}
+        {/* Formas */}
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          <b>Pasado:</b> {past} | <b>Participio:</b> {participle}
+        </Typography>
 
         {/* Ejemplo */}
         {examples.length > 0 && (
@@ -198,11 +184,12 @@ export const PhraseCard = ({
         )}
       </CardContent>
 
-      <PhraseViewDialog
+      {/* Dialogo */}
+      <VerbViewDialog
         open={isDialogOpen}
-        onClose={(e) => handleClose(e)}
-        phraseData={phrase}
-      ></PhraseViewDialog>
+        onClose={handleClose}
+        verbData={verb}
+      />
     </Card>
   );
 };

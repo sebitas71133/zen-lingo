@@ -55,7 +55,7 @@ export const WordPage = () => {
   }
 
   return (
-    <Container>
+    <Container sx={{ mt: 4 }}>
       <Collapse in={showFilters}>
         <SearchAndFilters />
       </Collapse>

@@ -6,7 +6,16 @@ const initialState = {
     wordEditForm: false,
     wordShowForm: false,
     phraseForm: false,
+
     phraseEditForm: false,
+    verbForm: false,
+    verbEditForm: false,
+    verbShowForm: false,
+
+    textForm: false,
+    textEditForm: false,
+    textShowForm: false,
+
     deleteConfirm: false,
     // puedes agregar más si es necesario
   },

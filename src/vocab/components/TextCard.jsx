@@ -9,18 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { WordCardActions } from "./WordCardActions";
-
-import { phraseTypeColors } from "../utils/wordTypes";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import StarIcon from "@mui/icons-material/Star";
-import { formattedDate } from "../utils/formatedDate";
-import { PhraseViewDialog } from "./PhraseViewDialog";
 
-export const PhraseCard = ({
-  phrase,
+import { formattedDate } from "../utils/formatedDate";
+import { WordCardActions } from "./WordCardActions";
+import { TextViewDialog } from "./TextViewDialog"; // crea este componente si aún no existe
+import { textTypeColors } from "../utils/wordTypes";
+
+export const TextCard = ({
+  text,
   onEdit,
   onDelete,
   onToggleLearned,
@@ -28,42 +28,34 @@ export const PhraseCard = ({
   isUpdating,
 }) => {
   const {
-    phrase: term,
-    translation,
-    type,
-    context,
-    examples = [],
+    title,
+    originalText,
     tags = [],
     isLearned,
     isFavorite,
     createdAt,
     updatedAt,
-  } = phrase;
-
-  console.log({ phrase });
+    type,
+  } = text;
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const handleOpen = (e) => {
     e.stopPropagation();
     setIsDialogOpen(true);
   };
-
   const handleClose = (e) => {
     e.stopPropagation();
     setIsDialogOpen(false);
   };
 
-  const typeColor = phraseTypeColors[type] || "#64b5f6";
-
-  console.log({ typeColor });
+  const typeColor = textTypeColors[type] || "#64b5f6";
 
   return (
     <Card
       variant="outlined"
       sx={{
         backgroundColor: isLearned ? "#2e7d3277" : `${typeColor}15`,
-        borderColor: isLearned ? "#388e3c" : typeColor, // success.dark o tono más fuerte
+        borderColor: isLearned ? "#388e3c" : typeColor,
         mb: 2,
         transition: "0.3s",
         boxShadow: `0 0 10px ${typeColor}30`,
@@ -82,18 +74,18 @@ export const PhraseCard = ({
         >
           <Typography
             variant="h6"
-            sx={{ textTransform: "capitalize", fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", textTransform: "capitalize" }}
           >
-            {term} — <b>{translation}</b>
+            {title}
           </Typography>
 
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ mr: 3 }}>
-            <Tooltip title="Ver detalles">
-              <IconButton onClick={(e) => handleOpen(e)}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Tooltip title="Ver texto completo">
+              <IconButton onClick={handleOpen}>
                 <VisibilityIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
+            <Tooltip title={isLearned ? "Aprendido" : "Marcar como aprendido"}>
               <IconButton
                 disabled={isUpdating}
                 onClick={(e) => {
@@ -123,7 +115,8 @@ export const PhraseCard = ({
                 )}
               </IconButton>
             </Tooltip>
-            {/* Acciones (Editar / Eliminar) */}
+
+            {/* Acciones */}
             <WordCardActions onEdit={onEdit} onDelete={onDelete} />
           </Stack>
         </Stack>
@@ -135,47 +128,27 @@ export const PhraseCard = ({
               Tipo: <b>{type}</b>
             </Typography>
           )}
-          {createdAt && (
+          {updatedAt && (
             <Typography variant="caption" color="text.secondary">
               Actualizado el: {formattedDate(updatedAt)}
             </Typography>
           )}
         </Stack>
 
-        {/* Definición */}
-        {context && (
-          <Typography
-            variant="body1"
-            sx={{
-              mt: 1,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {context}
-          </Typography>
-        )}
-
-        {/* Ejemplo */}
-        {examples.length > 0 && (
-          <Typography
-            variant="body2"
-            sx={{
-              fontStyle: "italic",
-              mt: 1,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            Ejemplo: {examples[0]}
-          </Typography>
-        )}
+        {/* Contenido resumido */}
+        <Typography
+          variant="body2"
+          sx={{
+            mt: 1,
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {originalText}
+        </Typography>
 
         {/* Tags */}
         {tags.length > 0 && (
@@ -198,11 +171,12 @@ export const PhraseCard = ({
         )}
       </CardContent>
 
-      <PhraseViewDialog
+      {/* Diálogo */}
+      <TextViewDialog
         open={isDialogOpen}
-        onClose={(e) => handleClose(e)}
-        phraseData={phrase}
-      ></PhraseViewDialog>
+        onClose={handleClose}
+        textData={text}
+      />
     </Card>
   );
 };

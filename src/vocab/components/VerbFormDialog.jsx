@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Autocomplete,
   Box,
   Button,
@@ -11,36 +14,52 @@ import {
   MenuItem,
   Stack,
   TextField,
+  Typography,
   useTheme,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, { useEffect, useState } from "react";
 import { useTagStore } from "../hooks/useTagStore";
-import { usePhraseStore } from "../hooks/usePhraseStore";
+import { useVerbStore } from "../hooks/useVerbStore";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 
-const WORD_TYPES = ["phrases", "idioms"];
+const VERB_TYPES = ["regular", "irregular"];
 const DEFAULT_VALUES = {
-  phrase: "",
+  verb: "",
   translation: "",
   type: "",
-  context: "",
   examples: [],
   tags: [],
+  conjugations: {
+    base: "",
+    thirdPerson: "",
+    past: "",
+    pastParticiple: "",
+    presentParticiple: "",
+    future: {
+      simple: "",
+      goingTo: "",
+    },
+    modals: {
+      can: "",
+      could: "",
+      would: "",
+      should: "",
+      might: "",
+      must: "",
+    },
+  },
 };
 
 const MotionBox = motion(Box);
 
-export const PhraseFormDialog = ({ open, onClose, initialData }) => {
+export const VerbFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();
-
-  // Estado local
   const [exampleInput, setExampleInput] = useState("");
 
   const { tags: allTags = [], isLoading: loadingTags } = useTagStore();
-
-  const { createPhrase, updatePhraseById, isAdding, isUpdating } =
-    usePhraseStore();
+  const { createVerb, updateVerbById, isAdding, isUpdating } = useVerbStore();
 
   const {
     control,
@@ -50,11 +69,8 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm({
-    defaultValues: DEFAULT_VALUES,
-  });
+  } = useForm({ defaultValues: DEFAULT_VALUES });
 
-  // Carga de datos iniciales
   useEffect(() => {
     if (initialData) {
       reset({ ...DEFAULT_VALUES, ...initialData });
@@ -63,7 +79,6 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     }
   }, [initialData, reset]);
 
-  // Agregar / eliminar ejemplos
   const handleAddExample = () => {
     const text = exampleInput.trim();
     if (!text) return;
@@ -73,6 +88,7 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     }
     setExampleInput("");
   };
+
   const handleRemoveExample = (idx) => {
     const exs = getValues("examples") || [];
     setValue(
@@ -81,14 +97,12 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     );
   };
 
-  // Envío
   const onSubmit = async (data) => {
-    console.log({ data });
     const payload = { ...data, updatedAt: new Date().toISOString() };
     if (initialData?.id) {
-      await updatePhraseById(initialData.id, payload);
+      await updateVerbById(initialData.id, payload);
     } else {
-      await createPhrase({
+      await createVerb({
         ...payload,
         createdAt: new Date().toISOString(),
         isLearned: false,
@@ -119,25 +133,23 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
           }}
         >
           <DialogTitle sx={{ textAlign: "center", pb: 1 }}>
-            {initialData?.id ? "✏️ Editar frase" : "🆕 Nueva frase"}
+            {initialData?.id ? "✏️ Editar verbo" : "🆕 Nuevo verbo"}
           </DialogTitle>
 
           <DialogContent dividers>
             <Stack spacing={2}>
-              {/* Frase */}
+              {/* Verbo */}
               <Controller
-                name="phrase"
+                name="verb"
                 control={control}
                 rules={{ required: "Campo obligatorio" }}
-                fullWidth
-                multiline
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Frase o Idiomatica"
+                    label="Verbo en inglés"
                     fullWidth
-                    error={!!errors.phrase}
-                    helperText={errors.phrase?.message}
+                    error={!!errors.verb}
+                    helperText={errors.verb?.message}
                   />
                 )}
               />
@@ -162,37 +174,22 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               <Controller
                 name="type"
                 control={control}
-                rules={{ required: "Selecciona un tipo" }}
+                rules={{ required: "Campo obligatorio" }}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    select
                     label="Tipo"
+                    select
                     fullWidth
                     error={!!errors.type}
                     helperText={errors.type?.message}
                   >
-                    {WORD_TYPES.map((t) => (
-                      <MenuItem key={t} value={t}>
-                        {t}
+                    {VERB_TYPES.map((type) => (
+                      <MenuItem key={type} value={type}>
+                        {type}
                       </MenuItem>
                     ))}
                   </TextField>
-                )}
-              />
-
-              {/* Contexto */}
-              <Controller
-                name="context"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Contexto/significado (opcional)"
-                    fullWidth
-                    multiline
-                    rows={3}
-                  />
                 )}
               />
 
@@ -229,32 +226,100 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                 </Stack>
               </Box>
 
+              {/* Conjugaciones */}
+
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">Conjugaciones</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Formas simples */}
+                  <Typography variant="subtitle1" gutterBottom>
+                    Formas simples
+                  </Typography>
+                  <Stack spacing={1} mb={2}>
+                    {[
+                      { name: "base", label: "Forma base" },
+                      { name: "thirdPerson", label: "Tercera persona" },
+                      { name: "past", label: "Pasado" },
+                      { name: "pastParticiple", label: "Participio pasado" },
+                      { name: "presentParticiple", label: "Gerundio" },
+                    ].map(({ name, label }) => (
+                      <Controller
+                        key={name}
+                        name={`conjugations.${name}`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField {...field} label={label} fullWidth />
+                        )}
+                      />
+                    ))}
+                  </Stack>
+
+                  {/* Futuro */}
+                  <Typography variant="subtitle1" gutterBottom>
+                    Futuro
+                  </Typography>
+                  <Stack spacing={1} mb={2}>
+                    {[
+                      { name: "simple", label: "Futuro simple (will eat)" },
+                      { name: "goingTo", label: "Going to (is going to eat)" },
+                    ].map(({ name, label }) => (
+                      <Controller
+                        key={name}
+                        name={`conjugations.future.${name}`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField {...field} label={label} fullWidth />
+                        )}
+                      />
+                    ))}
+                  </Stack>
+
+                  {/* Modales */}
+                  <Typography variant="subtitle1" gutterBottom>
+                    Modales
+                  </Typography>
+                  <Stack spacing={1}>
+                    {[
+                      { name: "can", label: "Can (puede)" },
+                      { name: "could", label: "Could (podría)" },
+                      { name: "would", label: "Would (haría)" },
+                      { name: "should", label: "Should (debería)" },
+                      { name: "might", label: "Might (podría tal vez)" },
+                      { name: "must", label: "Must (debe)" },
+                    ].map(({ name, label }) => (
+                      <Controller
+                        key={name}
+                        name={`conjugations.modals.${name}`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField {...field} label={label} fullWidth />
+                        )}
+                      />
+                    ))}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+
               {/* Tags */}
               <Controller
                 name="tags"
                 control={control}
                 render={({ field }) => (
                   <Autocomplete
+                    {...field}
                     multiple
                     options={allTags}
-                    getOptionLabel={(opt) => opt.name}
+                    getOptionLabel={(option) => option.name}
                     loading={loadingTags}
-                    value={field.value}
-                    onChange={(_, v) => field.onChange(v)}
+                    value={field.value || []}
+                    onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Etiquetas"
-                        placeholder="Selecciona..."
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loadingTags && <CircularProgress size={20} />}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
+                        placeholder="Seleccionar etiquetas"
                       />
                     )}
                   />
@@ -263,14 +328,12 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
             </Stack>
           </DialogContent>
 
-          <DialogActions sx={{ px: 3, pb: 2, pt: 1 }}>
+          <DialogActions>
             <Button
               onClick={() => {
                 reset();
                 onClose();
               }}
-              disabled={isAdding || isUpdating}
-              color="inherit"
             >
               Cancelar
             </Button>
@@ -278,17 +341,8 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               onClick={handleSubmit(onSubmit)}
               variant="contained"
               disabled={isAdding || isUpdating}
-              component={motion.button}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                color: "#fff",
-                px: 3,
-                borderRadius: 1,
-              }}
             >
-              {initialData?.id ? "Actualizar" : "Crear"}
+              Guardar
             </Button>
           </DialogActions>
         </Box>

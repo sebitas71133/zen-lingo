@@ -121,6 +121,9 @@ export const WordCard = ({
                 )}
               </IconButton>
             </Tooltip>
+
+            {/* Acciones (Editar / Eliminar) */}
+            <WordCardActions onEdit={onEdit} onDelete={onDelete} />
           </Stack>
         </Stack>
 
@@ -140,14 +143,35 @@ export const WordCard = ({
 
         {/* Definición */}
         {definition && (
-          <Typography variant="body1" sx={{ mt: 1 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              mt: 1,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {definition}
           </Typography>
         )}
 
         {/* Ejemplo */}
         {examples.length > 0 && (
-          <Typography variant="body2" sx={{ fontStyle: "italic", mt: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontStyle: "italic",
+              mt: 1,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             Ejemplo: {examples[0]}
           </Typography>
         )}
@@ -172,9 +196,6 @@ export const WordCard = ({
           </Stack>
         )}
       </CardContent>
-
-      {/* Acciones (Editar / Eliminar) */}
-      <WordCardActions onEdit={onEdit} onDelete={onDelete} />
 
       {/* Dialogo de vista */}
       <WordViewDialog

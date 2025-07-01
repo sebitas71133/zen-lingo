@@ -91,15 +91,7 @@ export const WordList = ({ words }) => {
     <Box sx={{ mt: 3 }}>
       <Grid container spacing={2}>
         {currentWords.map((word) => (
-          <Grid
-            item
-            key={word.id}
-            xs={12} // 1 por fila en móviles
-            sm={6} // 2 por fila en pantallas ≥600px
-            // md={4} // 3 por fila en pantallas ≥900px
-            // lg={3} // 4 por fila en pantallas ≥1200px
-            // sx={{ display: "flex" }}
-          >
+          <Grid item key={word.id} xs={12} sm={6}>
             <WordCard
               word={word}
               onEdit={() => handleEdit(word)}

@@ -20,7 +20,7 @@ export const WordCardActions = ({ onEdit, onDelete }) => {
       <Tooltip title="Más opciones">
         <IconButton
           onClick={handleMenuOpen}
-          sx={{ position: "absolute", top: 15, right: 1 }}
+          // sx={{ position: "absolute", top: 15, right: 1 }}
         >
           <MoreVertIcon />
         </IconButton>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { usePhraseStore } from "../hooks/usePhraseStore";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import Swal from "sweetalert2";
 import {
@@ -14,80 +13,70 @@ import {
   Tooltip,
 } from "@mui/material";
 import { usePagination } from "../hooks/usePagination";
+import { useTextStore } from "../hooks/useTextStore";
+import { TextCard } from "./TextCard";
+import { TextFormDialog } from "./TextFormDialog";
 
-import { PhraseCard } from "./PhraseCard";
-import { PhraseFormDialog } from "./PhraseFormDialog";
-import { phraseTypeColors } from "../utils/wordTypes";
-
-export const PhraseList = ({ phrases, showFilters }) => {
-  const [searchName, setSearchName] = useState("");
-
+export const TextList = ({ texts, showFilters }) => {
+  const [search, setSearch] = useState("");
   const [order, setOrder] = useState("asc");
-
   const [itemsPerPage, setItemsPerPage] = useState(6);
-
   const [type, setType] = useState("");
 
-  let filtered = [...phrases];
+  let filtered = [...texts];
 
-  if (searchName) {
-    filtered = filtered.filter((phrase) =>
-      phrase.phrase.toLowerCase().includes(searchName.toLowerCase())
+  if (search) {
+    filtered = filtered.filter((t) =>
+      t.title.toLowerCase().includes(search.toLowerCase())
     );
   }
 
   if (type) {
     filtered = filtered.filter(
-      (word) => word.type?.toLowerCase() === type.toLowerCase()
+      (t) => t.type?.toLowerCase() === type.toLowerCase()
     );
   }
 
   if (order) {
     filtered.sort((a, b) =>
       order === "asc"
-        ? a.phrase.localeCompare(b.phrase)
-        : b.phrase.localeCompare(a.phrase)
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title)
     );
   }
 
   const dispatch = useDispatch();
-
   const {
-    currentPageData: currentPhrases,
+    currentPageData: currentTexts,
     page,
     setPage,
     totalPages,
   } = usePagination(filtered, itemsPerPage);
 
-  const { phraseEditForm: openForm } = useSelector((state) => state.ui.dialogs);
+  const { textEditForm: openForm } = useSelector((state) => state.ui.dialogs);
 
-  const {
-    deletePhraseById,
-    toggleFavoriteById,
-    toggleIsLearnedById,
-    isUpdating,
-  } = usePhraseStore();
+  const { deleteTextById, toggleFavoriteById, toggleIsReadById, isUpdating } =
+    useTextStore();
 
-  const [wordToEdit, setWordToEdit] = useState(null);
+  const [textToEdit, setTextToEdit] = useState(null);
 
-  const handleEdit = (word) => {
-    setWordToEdit(word);
-
-    dispatch(openDialog("phraseEditForm"));
+  const handleEdit = (text) => {
+    setTextToEdit(text);
+    dispatch(openDialog("textEditForm"));
   };
 
-  const handleToggleFavorite = async (word) => {
-    await toggleFavoriteById(word.id, word);
+  const handleToggleFavorite = async (text) => {
+    await toggleFavoriteById(text.id, text);
   };
 
-  const handleToggleIsLearned = async (word) => {
-    await toggleIsLearnedById(word.id, word);
+  const handleToggleIsRead = async (text) => {
+    await toggleIsReadById(text.id, text);
   };
 
-  const handleDelete = async (phrase) => {
+  const handleDelete = async (text) => {
     const result = await Swal.fire({
       title: "¿Estás seguro?",
-      text: `Vas a eliminar la frase `,
+      text: "Vas a eliminar el texto",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, eliminar",
@@ -97,10 +86,10 @@ export const PhraseList = ({ phrases, showFilters }) => {
     });
 
     if (result.isConfirmed) {
-      await deletePhraseById(phrase.id);
+      await deleteTextById(text.id);
       Swal.fire({
         title: "Eliminado",
-        text: "La frase o idiom fue eliminada correctamente.",
+        text: "El texto fue eliminado correctamente.",
         icon: "success",
         timer: 1500,
         showConfirmButton: false,
@@ -109,26 +98,23 @@ export const PhraseList = ({ phrases, showFilters }) => {
   };
 
   useEffect(() => {
-    if (!openForm) setWordToEdit(null);
+    if (!openForm) setTextToEdit(null);
   }, [openForm]);
 
   return (
     <Box sx={{ mt: 3 }} fullWidth>
-      {/* FILTERS */}
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                label="Buscar"
+                label="Buscar texto"
                 size="small"
                 fullWidth
-                variant="outlined"
-                value={searchName}
-                onChange={(e) => setSearchName(e.target.value)}
-              ></TextField>
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </Grid>
-
             <Grid item xs={6} sm={4} md={2}>
               <TextField
                 label="Dirección"
@@ -143,7 +129,7 @@ export const PhraseList = ({ phrases, showFilters }) => {
               </TextField>
             </Grid>
             <Grid item xs={6} sm={4} md={2}>
-              <Tooltip title="Cantidad de frases por página">
+              <Tooltip title="Cantidad de textos por página">
                 <TextField
                   label="Por página"
                   select
@@ -164,43 +150,32 @@ export const PhraseList = ({ phrases, showFilters }) => {
               <TextField
                 label="Tipo"
                 select
-                variant="outlined"
                 size="small"
                 fullWidth
                 value={type}
                 onChange={(e) => setType(e.target.value)}
               >
                 <MenuItem value="">Todos</MenuItem>
-                {Object.entries(phraseTypeColors).map(([type, color]) => (
-                  <MenuItem
-                    key={type}
-                    value={type}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: color,
-                        opacity: 0.85,
-                      },
-                    }}
-                  >
-                    {type}
-                  </MenuItem>
-                ))}
+                <MenuItem value="poema">poema</MenuItem>
+                <MenuItem value="cuento">cuento</MenuItem>
+                <MenuItem value="frase">frase</MenuItem>
+                <MenuItem value="diálogo">diálogo</MenuItem>
+                <MenuItem value="otro">otro</MenuItem>
               </TextField>
             </Grid>
           </Grid>
         </Box>
       </Collapse>
 
-      {/* LISTA DE PHRASES */}
       <Grid container spacing={2}>
-        {currentPhrases.map((word) => (
-          <Grid item key={word.id} xs={12} sm={6}>
-            <PhraseCard
-              phrase={word}
-              onEdit={() => handleEdit(word)}
-              onDelete={() => handleDelete(word)}
-              onToggleLearned={() => handleToggleIsLearned(word)}
-              onToggleFavorite={() => handleToggleFavorite(word)}
+        {currentTexts.map((text) => (
+          <Grid item key={text.id} xs={12} sm={6}>
+            <TextCard
+              text={text}
+              onEdit={() => handleEdit(text)}
+              onDelete={() => handleDelete(text)}
+              onToggleRead={() => handleToggleIsRead(text)}
+              onToggleFavorite={() => handleToggleFavorite(text)}
               isUpdating={isUpdating}
             />
           </Grid>
@@ -218,10 +193,10 @@ export const PhraseList = ({ phrases, showFilters }) => {
         </Stack>
       )}
 
-      <PhraseFormDialog
+      <TextFormDialog
         open={openForm}
-        onClose={() => dispatch(closeDialog("phraseEditForm"))}
-        initialData={wordToEdit}
+        onClose={() => dispatch(closeDialog("textEditForm"))}
+        initialData={textToEdit}
       />
     </Box>
   );
