@@ -10,8 +10,6 @@ const drawerWidth = 280;
 export const PrivateLayout = () => {
   const { user } = useAuthStore();
 
-  console.log({ user });
-
   return (
     <Box
       sx={{

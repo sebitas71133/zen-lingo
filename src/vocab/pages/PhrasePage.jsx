@@ -19,6 +19,8 @@ import { useState } from "react";
 export const PhrasePage = () => {
   const { phrases = [], isLoading, isError } = usePhraseStore();
 
+  console.log({ phrases });
+
   const dispatch = useDispatch();
   const { phraseForm: openForm } = useSelector((state) => state.ui.dialogs);
 
@@ -46,7 +48,7 @@ export const PhrasePage = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 5 }}>
       {phrases.length === 0 ? (
         <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
           No hay palabras guardadas todavía 😅

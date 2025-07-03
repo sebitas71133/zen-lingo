@@ -46,8 +46,6 @@ export const FavoritesPageUser = () => {
 
   const { uid } = useSelector((state) => state.auth);
 
-  console.log({ uid });
-
   const { loadFavorites, deleteFavorite } = useFavoriteStore();
   const [tab, setTab] = useState(0);
 

@@ -24,8 +24,6 @@ export const TextPage = () => {
   const { texts = [], isLoading, isError } = useTextStore();
   const [showFilters, setShowFilters] = useState(false);
 
-  console.log({ texts });
-
   if (isLoading) {
     return (
       <Stack alignItems="center" mt={4}>
@@ -34,6 +32,8 @@ export const TextPage = () => {
       </Stack>
     );
   }
+
+  console.log({ texts });
 
   if (isError) {
     return (
@@ -48,7 +48,7 @@ export const TextPage = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 5 }}>
       {texts.length === 0 ? (
         <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
           No hay textos guardados todavía 😅

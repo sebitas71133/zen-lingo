@@ -16,7 +16,6 @@ export const useWordStore = () => {
   };
 
   const deleteWordById = async (id) => {
-    console.log({ id });
     await deleteWord(id);
   };
 

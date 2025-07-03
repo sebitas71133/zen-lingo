@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import {
   Box,
   Collapse,
+  Container,
   Grid,
   MenuItem,
   Pagination,
@@ -106,7 +107,7 @@ export const VerbList = ({ verbs, showFilters }) => {
   }, [openForm]);
 
   return (
-    <Box sx={{ mt: 3 }} fullWidth>
+    <Container sx={{ mt: 4 }}>
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
           <Grid container spacing={2}>
@@ -168,37 +169,39 @@ export const VerbList = ({ verbs, showFilters }) => {
         </Box>
       </Collapse>
 
-      <Grid container spacing={2}>
-        {currentVerbs.map((verb) => (
-          <Grid item key={verb.id} xs={12} sm={6}>
-            <VerbCard
-              verb={verb}
-              onEdit={() => handleEdit(verb)}
-              onDelete={() => handleDelete(verb)}
-              onToggleLearned={() => handleToggleIsLearned(verb)}
-              onToggleFavorite={() => handleToggleFavorite(verb)}
-              isUpdating={isUpdating}
+      <Box>
+        <Grid container spacing={2}>
+          {currentVerbs.map((verb) => (
+            <Grid item key={verb.id} xs={12} sm={6} md={4} lg={3}>
+              <VerbCard
+                verb={verb}
+                onEdit={() => handleEdit(verb)}
+                onDelete={() => handleDelete(verb)}
+                onToggleLearned={() => handleToggleIsLearned(verb)}
+                onToggleFavorite={() => handleToggleFavorite(verb)}
+                isUpdating={isUpdating}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {totalPages > 1 && (
+          <Stack mt={4} alignItems="center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              color="primary"
             />
-          </Grid>
-        ))}
-      </Grid>
+          </Stack>
+        )}
 
-      {totalPages > 1 && (
-        <Stack mt={4} alignItems="center">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-            color="primary"
-          />
-        </Stack>
-      )}
-
-      <VerbFormDialog
-        open={openForm}
-        onClose={() => dispatch(closeDialog("verbEditForm"))}
-        initialData={verbToEdit}
-      />
-    </Box>
+        <VerbFormDialog
+          open={openForm}
+          onClose={() => dispatch(closeDialog("verbEditForm"))}
+          initialData={verbToEdit}
+        />
+      </Box>
+    </Container>
   );
 };

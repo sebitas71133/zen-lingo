@@ -48,7 +48,7 @@ export const SearchAndFilters = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Pantallas menores a 600px
 
   return (
-    <Box sx={{ mb: 3, mt: 2 }}>
+    <Box sx={{ mb: 3 }}>
       <Grid container spacing={2}>
         {/* Fila 1: Búsqueda y Tipo */}
         <Grid item xs={12} sm={6} md={4}>

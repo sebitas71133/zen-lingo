@@ -13,14 +13,14 @@ import Swal from "sweetalert2";
 export const WordList = ({ words }) => {
   // const itemsPerPage = 6;
 
-  const { itemsPerPage = 6 } = useSelector((state) => state.wordFilter);
+  // const { itemsPerPage = 6 } = useSelector((state) => state.wordFilter);
 
-  const {
-    currentPageData: currentWords,
-    page,
-    setPage,
-    totalPages,
-  } = usePagination(words, itemsPerPage);
+  // const {
+  //   currentPageData: currentWords,
+  //   page,
+  //   setPage,
+  //   totalPages,
+  // } = usePagination(words, itemsPerPage);
 
   const dispatch = useDispatch();
   const { wordEditForm: openForm } = useSelector((state) => state.ui.dialogs);
@@ -61,7 +61,6 @@ export const WordList = ({ words }) => {
     }
   };
   const handleToggleLearned = async (word) => {
-    console.log({ word });
     try {
       await updateWordById(word.id, {
         ...word,
@@ -76,7 +75,7 @@ export const WordList = ({ words }) => {
     try {
       await updateWordById(word.id, {
         ...word,
-        isFavorite: !word.isFavorite ?? false, // alterna el estado
+        isFavorite: !word.isFavorite, // alterna el estado
       });
     } catch (error) {
       console.error("Error al actualizar el estado de 'learned':", error);
@@ -90,8 +89,8 @@ export const WordList = ({ words }) => {
   return (
     <Box sx={{ mt: 3 }}>
       <Grid container spacing={2}>
-        {currentWords.map((word) => (
-          <Grid item key={word.id} xs={12} sm={6}>
+        {words.map((word) => (
+          <Grid item key={word.id} xs={12} sm={6} md={4} lg={3}>
             <WordCard
               word={word}
               onEdit={() => handleEdit(word)}
@@ -104,7 +103,7 @@ export const WordList = ({ words }) => {
         ))}
       </Grid>
 
-      {totalPages > 1 && (
+      {/* {totalPages > 1 && (
         <Stack mt={4} alignItems="center">
           <Pagination
             count={totalPages}
@@ -113,7 +112,7 @@ export const WordList = ({ words }) => {
             color="primary"
           />
         </Stack>
-      )}
+      )} */}
 
       <WordFormDialog
         open={openForm}

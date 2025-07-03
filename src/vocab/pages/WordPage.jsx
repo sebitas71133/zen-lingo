@@ -5,6 +5,7 @@ import {
   Collapse,
   Container,
   Fab,
+  Pagination,
   Stack,
   Typography,
 } from "@mui/material";
@@ -18,6 +19,7 @@ import { useFilteredWords } from "../hooks/useFilteredWords";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import { SeedWords } from "../../seed/SeedWords";
+import { usePagination } from "../hooks/usePagination";
 
 export const WordPage = () => {
   // const [openForm, setOpenForm] = useState(false);
@@ -29,9 +31,19 @@ export const WordPage = () => {
   const filters = useSelector((state) => state.wordFilter);
 
   const { data: words = [], isLoading, isError } = useGetWordsQuery();
+
   const filteredWords = useFilteredWords(words, filters);
 
-  console.log({ words });
+  // Paginacion
+
+  const { itemsPerPage = 6 } = useSelector((state) => state.wordFilter);
+
+  const {
+    currentPageData: currentWords,
+    page,
+    setPage,
+    totalPages,
+  } = usePagination(filteredWords, itemsPerPage);
 
   if (isLoading) {
     return (
@@ -55,7 +67,7 @@ export const WordPage = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 5 }}>
       <Collapse in={showFilters}>
         <SearchAndFilters />
       </Collapse>
@@ -66,7 +78,7 @@ export const WordPage = () => {
           No hay palabras guardadas todavía 😅
         </Typography>
       ) : (
-        <WordList words={filteredWords} />
+        <WordList words={currentWords} />
       )}
 
       {/* Boton para agregar nueva nota */}
@@ -96,6 +108,29 @@ export const WordPage = () => {
         onClose={() => dispatch(closeDialog("wordForm"))}
         initialData={null}
       />
+
+      {/* Páginacion */}
+
+      {totalPages > 1 && (
+        <Stack
+          mt={4}
+          alignItems="center"
+          sx={{
+            position: "fixed", // siempre visible
+            bottom: 20, // separación desde el fondo
+            left: 0,
+            right: 0,
+            zIndex: 1100, // sobre contenido
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+          />
+        </Stack>
+      )}
     </Container>
   );
 };

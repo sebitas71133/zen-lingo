@@ -62,6 +62,8 @@ export const TagsPage = () => {
     deleteTagById,
   } = useTagStore();
 
+  console.log({ tagsData });
+
   const [selectedTag, setSelectedTag] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -165,207 +167,213 @@ export const TagsPage = () => {
   }
 
   return (
-    <Container>
-      {/* FILTERS */}
-      <Collapse in={showFilters}>
-        <Box sx={{ mb: 5 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                label="Buscar"
-                size="small"
-                fullWidth
-                variant="outlined"
-                value={searchName}
-                onChange={(e) => setSearchName(e.target.value)}
-              ></TextField>
-            </Grid>
-
-            <Grid item xs={6} sm={4} md={2}>
-              <TextField
-                label="Dirección"
-                select
-                size="small"
-                fullWidth
-                value={order}
-                onChange={(e) => setOrder(e.target.value)}
-              >
-                <MenuItem value="asc">Ascendente</MenuItem>
-                <MenuItem value="desc">Descendente</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid item xs={6} sm={4} md={2}>
-              <Tooltip title="Cantidad de palabras por página">
+    <>
+      <Container sx={{ mt: 5 }}>
+        {/* FILTERS */}
+        <Collapse in={showFilters}>
+          <Box sx={{ mb: 5 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
-                  label="Por página"
+                  label="Buscar"
+                  size="small"
+                  fullWidth
+                  variant="outlined"
+                  value={searchName}
+                  onChange={(e) => setSearchName(e.target.value)}
+                ></TextField>
+              </Grid>
+
+              <Grid item xs={6} sm={4} md={2}>
+                <TextField
+                  label="Dirección"
                   select
                   size="small"
                   fullWidth
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  value={order}
+                  onChange={(e) => setOrder(e.target.value)}
                 >
-                  {[3, 6, 9, 12, 15].map((num) => (
-                    <MenuItem key={num} value={num}>
-                      {num}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value="asc">Ascendente</MenuItem>
+                  <MenuItem value="desc">Descendente</MenuItem>
                 </TextField>
-              </Tooltip>
+              </Grid>
+              <Grid item xs={6} sm={4} md={2}>
+                <Tooltip title="Cantidad de palabras por página">
+                  <TextField
+                    label="Por página"
+                    select
+                    size="small"
+                    fullWidth
+                    value={itemsPerPage}
+                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  >
+                    {[3, 6, 9, 12, 15].map((num) => (
+                      <MenuItem key={num} value={num}>
+                        {num}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Tooltip>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </Collapse>
+          </Box>
+        </Collapse>
 
-      <Fab
-        color="primary"
-        onClick={() => handleOpenModal()}
-        sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 100 }}
-      >
-        <AddIcon />
-      </Fab>
+        <Fab
+          color="primary"
+          onClick={() => handleOpenModal()}
+          sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 100 }}
+        >
+          <AddIcon />
+        </Fab>
 
-      <Fab
-        color="secondary"
-        onClick={() => setShowFilters(!showFilters)}
-        sx={{
-          position: "fixed",
-          bottom: 94, // un poco más arriba que el botón de crear
-          right: 24,
-          zIndex: 100,
-        }}
-      >
-        <FilterListIcon />
-      </Fab>
-
-      {/* Lista de etiquetas */}
-      <Box display="flex" flexWrap="wrap" gap={1.5} mt={2}>
-        {paginatedTags?.length > 0 ? (
-          paginatedTags.map((tag, i) => {
-            const color = tag.color || tagColors[i % tagColors.length];
-            return (
-              <Chip
-                key={tag.id}
-                label={tag.name}
-                sx={{
-                  fontSize: "1rem",
-                  px: 2,
-                  py: 0.8,
-                  backgroundColor: color,
-                  color: "#fff",
-                  borderRadius: "20px",
-                  "&:hover": {
-                    opacity: 0.9,
-                    cursor: "pointer",
-                  },
-                }}
-                onClick={() => handleOpenModal(tag)}
-                deleteIcon={
-                  <Tooltip title="Eliminar">
-                    <DeleteIcon
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteTag(tag);
-                      }}
-                      sx={{ color: "#fff" }}
-                    />
-                  </Tooltip>
-                }
-                onDelete={() => {}}
-              />
-            );
-          })
-        ) : (
-          <Paper sx={{ p: 3, width: "100%", textAlign: "center" }}>
-            <Typography variant="body1" mb={1}>
-              No hay etiquetas creadas aún.
-            </Typography>
-            <Button variant="contained" onClick={() => handleOpenModal()}>
-              Crear Etiqueta
-            </Button>
-          </Paper>
-        )}
-      </Box>
-
-      {/* Modal de edición / creación */}
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <Box
+        <Fab
+          color="secondary"
+          onClick={() => setShowFilters(!showFilters)}
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            width: "90%",
-            maxWidth: 400,
+            position: "fixed",
+            bottom: 94, // un poco más arriba que el botón de crear
+            right: 24,
+            zIndex: 100,
           }}
         >
-          <Typography variant="h6" gutterBottom>
-            {selectedTag?.id ? "Editar etiqueta" : "Nueva etiqueta"}
-          </Typography>
-          <TextField
-            label="Nombre"
-            fullWidth
-            value={selectedTag?.name || ""}
-            onChange={(e) =>
-              setSelectedTag((prev) => ({ ...prev, name: e.target.value }))
-            }
-            sx={{ mb: 2 }}
-          />
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            Color
-          </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
-            {tagColors.map((color) => (
-              <Box
-                key={color}
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  backgroundColor: color,
-                  border:
-                    selectedTag?.color === color
-                      ? "3px solid #000"
-                      : "2px solid transparent",
-                  cursor: "pointer",
-                  transition: "0.2s",
-                  "&:hover": {
-                    opacity: 0.8,
-                  },
-                }}
-                onClick={() =>
-                  setSelectedTag((prev) => ({
-                    ...prev,
-                    color,
-                  }))
-                }
-              />
-            ))}
-          </Box>
-          <Box display="flex" justifyContent="flex-end" gap={1}>
-            <Button onClick={handleCloseModal}>Cancelar</Button>
-            <Button variant="contained" onClick={handleSaveTag}>
-              Guardar
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+          <FilterListIcon />
+        </Fab>
 
-      {/* Paginación */}
-      {totalPagesTags > 1 && (
-        <Stack spacing={2} mt={5} alignItems="center">
-          <Pagination
-            count={totalPagesTags}
-            page={pageTags}
-            onChange={(_, value) => setPageTags(value)}
-            color="primary"
-          />
-        </Stack>
-      )}
-    </Container>
+        {/* Lista de etiquetas */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            {paginatedTags?.length > 0 ? (
+              paginatedTags.map((tag, i) => {
+                const color = tag.color || tagColors[i % tagColors.length];
+                return (
+                  <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    sx={{
+                      fontSize: "1rem",
+                      px: 2,
+                      py: 0.8,
+                      backgroundColor: color,
+                      color: "#fff",
+                      borderRadius: "20px",
+                      "&:hover": {
+                        opacity: 0.9,
+                        cursor: "pointer",
+                      },
+                      ml: 2,
+                      mt: 2,
+                    }}
+                    onClick={() => handleOpenModal(tag)}
+                    deleteIcon={
+                      <Tooltip title="Eliminar">
+                        <DeleteIcon
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteTag(tag);
+                          }}
+                          sx={{ color: "#fff" }}
+                        />
+                      </Tooltip>
+                    }
+                    onDelete={() => {}}
+                  />
+                );
+              })
+            ) : (
+              <Paper sx={{ p: 3, width: "100%", textAlign: "center" }}>
+                <Typography variant="body1" mb={1}>
+                  No hay etiquetas creadas aún.
+                </Typography>
+                <Button variant="contained" onClick={() => handleOpenModal()}>
+                  Crear Etiqueta
+                </Button>
+              </Paper>
+            )}{" "}
+          </Grid>
+        </Grid>
+
+        {/* Modal de edición / creación */}
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+              width: "90%",
+              maxWidth: 400,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              {selectedTag?.id ? "Editar etiqueta" : "Nueva etiqueta"}
+            </Typography>
+            <TextField
+              label="Nombre"
+              fullWidth
+              value={selectedTag?.name || ""}
+              onChange={(e) =>
+                setSelectedTag((prev) => ({ ...prev, name: e.target.value }))
+              }
+              sx={{ mb: 2 }}
+            />
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              Color
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
+              {tagColors.map((color) => (
+                <Box
+                  key={color}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    backgroundColor: color,
+                    border:
+                      selectedTag?.color === color
+                        ? "3px solid #000"
+                        : "2px solid transparent",
+                    cursor: "pointer",
+                    transition: "0.2s",
+                    "&:hover": {
+                      opacity: 0.8,
+                    },
+                  }}
+                  onClick={() =>
+                    setSelectedTag((prev) => ({
+                      ...prev,
+                      color,
+                    }))
+                  }
+                />
+              ))}
+            </Box>
+            <Box display="flex" justifyContent="flex-end" gap={1}>
+              <Button onClick={handleCloseModal}>Cancelar</Button>
+              <Button variant="contained" onClick={handleSaveTag}>
+                Guardar
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+
+        {/* Paginación */}
+        {totalPagesTags > 1 && (
+          <Stack spacing={2} mt={5} alignItems="center">
+            <Pagination
+              count={totalPagesTags}
+              page={pageTags}
+              onChange={(_, value) => setPageTags(value)}
+              color="primary"
+            />
+          </Stack>
+        )}
+      </Container>
+    </>
   );
 };

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import {
   Box,
   Collapse,
+  Container,
   Grid,
   MenuItem,
   Pagination,
@@ -113,7 +114,7 @@ export const PhraseList = ({ phrases, showFilters }) => {
   }, [openForm]);
 
   return (
-    <Box sx={{ mt: 3 }} fullWidth>
+    <Container sx={{ mt: 5 }}>
       {/* FILTERS */}
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
@@ -191,38 +192,40 @@ export const PhraseList = ({ phrases, showFilters }) => {
         </Box>
       </Collapse>
 
-      {/* LISTA DE PHRASES */}
-      <Grid container spacing={2}>
-        {currentPhrases.map((word) => (
-          <Grid item key={word.id} xs={12} sm={6}>
-            <PhraseCard
-              phrase={word}
-              onEdit={() => handleEdit(word)}
-              onDelete={() => handleDelete(word)}
-              onToggleLearned={() => handleToggleIsLearned(word)}
-              onToggleFavorite={() => handleToggleFavorite(word)}
-              isUpdating={isUpdating}
+      <Box>
+        {/* LISTA DE PHRASES */}
+        <Grid container spacing={2}>
+          {currentPhrases.map((word) => (
+            <Grid item key={word.id} xs={12} sm={6} md={4} lg={3}>
+              <PhraseCard
+                phrase={word}
+                onEdit={() => handleEdit(word)}
+                onDelete={() => handleDelete(word)}
+                onToggleLearned={() => handleToggleIsLearned(word)}
+                onToggleFavorite={() => handleToggleFavorite(word)}
+                isUpdating={isUpdating}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {totalPages > 1 && (
+          <Stack mt={4} alignItems="center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              color="primary"
             />
-          </Grid>
-        ))}
-      </Grid>
+          </Stack>
+        )}
 
-      {totalPages > 1 && (
-        <Stack mt={4} alignItems="center">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-            color="primary"
-          />
-        </Stack>
-      )}
-
-      <PhraseFormDialog
-        open={openForm}
-        onClose={() => dispatch(closeDialog("phraseEditForm"))}
-        initialData={wordToEdit}
-      />
-    </Box>
+        <PhraseFormDialog
+          open={openForm}
+          onClose={() => dispatch(closeDialog("phraseEditForm"))}
+          initialData={wordToEdit}
+        />
+      </Box>
+    </Container>
   );
 };

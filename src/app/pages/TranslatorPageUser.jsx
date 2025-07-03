@@ -101,8 +101,6 @@ export const TranslatorPageUser = () => {
     formState: { errors },
   } = useForm();
 
-  console.log("TranslatorApp render");
-
   const onSubmitForm = async (formData) => {
     console.log(formData);
     if (!formData.inputText) return;
@@ -121,8 +119,6 @@ export const TranslatorPageUser = () => {
         formData.infoType
       );
 
-      console.log(result);
-
       dispatch(setTranslatedText(result));
     } catch (error) {
       console.error("Error en la traduccion: ", error);
@@ -139,7 +135,6 @@ export const TranslatorPageUser = () => {
     setValue("translationType", "word");
   }, []);
 
-  console.log("infoType:", watch("infoType"));
   return (
     <Container
       maxWidth="md"

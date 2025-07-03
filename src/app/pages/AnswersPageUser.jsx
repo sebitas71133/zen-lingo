@@ -61,7 +61,6 @@ export const AnswersPageUser = () => {
         formData.responseFormat,
         formData.temperature
       );
-      console.log(answer);
 
       dispatch(setGeneratedAnswer(answer));
     } catch (error) {

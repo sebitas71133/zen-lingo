@@ -13,8 +13,6 @@ export const handleSpeak = (text, lang, watch) => {
     /[^.!?]+[.!?]+/g
   ) || [text];
 
-  console.log({ text, lang, variation, rate, sentences });
-
   const speakNext = (index = 0) => {
     if (index < sentences.length) {
       const utterance = new SpeechSynthesisUtterance(sentences[index]);

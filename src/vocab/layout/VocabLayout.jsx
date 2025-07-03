@@ -10,8 +10,6 @@ const drawerWidth = 280;
 export const VocabLayout = () => {
   const { user } = useAuthStore();
 
-  console.log({ user });
-
   return (
     <Box
       sx={{
@@ -31,13 +29,7 @@ export const VocabLayout = () => {
 
         <Outlet
         //   context={{
-        //     userId: user?.id ?? null,
-        //     categories,
-        //     totalTags,
-        //     tags,
-        //     totalCategories,
-        //     notesTotal,
-        //     imagesTotal,
+        //
         //   }}
         ></Outlet>
       </Box>

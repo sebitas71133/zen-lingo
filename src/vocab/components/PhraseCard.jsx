@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardContent,
   Chip,
@@ -40,8 +41,6 @@ export const PhraseCard = ({
     updatedAt,
   } = phrase;
 
-  console.log({ phrase });
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleOpen = (e) => {
@@ -56,45 +55,59 @@ export const PhraseCard = ({
 
   const typeColor = phraseTypeColors[type] || "#64b5f6";
 
-  console.log({ typeColor });
-
   return (
     <Card
       variant="outlined"
       sx={{
         backgroundColor: isLearned ? "#2e7d3277" : `${typeColor}15`,
-        borderColor: isLearned ? "#388e3c" : typeColor, // success.dark o tono más fuerte
+        borderColor: isLearned ? "#388e3c" : typeColor,
         mb: 2,
-        transition: "0.3s",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        borderLeft: `6px solid ${typeColor}`,
         boxShadow: `0 0 10px ${typeColor}30`,
+        transition: "0.3s",
         "&:hover": {
           boxShadow: `0 0 15px ${typeColor}55`,
+          scale: "1.03",
         },
-        borderLeft: `6px solid ${typeColor}`,
       }}
     >
-      <CardContent>
-        {/* Título + botones */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+      <CardContent sx={{ flexGrow: 1, p: 2 }}>
+        {/* Título */}
+        <Typography
+          variant="h6"
+          sx={{
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            whiteSpace: "break-word",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          title={`${term} — ${translation}`}
         >
-          <Typography
-            variant="h6"
-            sx={{ textTransform: "capitalize", fontWeight: "bold" }}
-          >
-            {term} — <b>{translation}</b>
-          </Typography>
+          {term} — {translation}
+        </Typography>
 
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ mr: 3 }}>
+        {/* Acciones */}
+        <Box mt={1} mb={1}>
+          <Stack direction="row" spacing={0.5}>
             <Tooltip title="Ver detalles">
-              <IconButton onClick={(e) => handleOpen(e)}>
-                <VisibilityIcon />
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpen(e);
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
               </IconButton>
             </Tooltip>
+
             <Tooltip title={isLearned ? "Aprendida" : "Marcar como aprendida"}>
               <IconButton
+                size="small"
                 disabled={isUpdating}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -102,14 +115,19 @@ export const PhraseCard = ({
                 }}
               >
                 {isUpdating ? (
-                  <CircularProgress size={20} />
+                  <CircularProgress size={16} />
                 ) : (
-                  <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
+                  <CheckCircleIcon
+                    color={isLearned ? "success" : "disabled"}
+                    fontSize="small"
+                  />
                 )}
               </IconButton>
             </Tooltip>
+
             <Tooltip title={isFavorite ? "Favorito" : "Marcar como favorito"}>
               <IconButton
+                size="small"
                 disabled={isUpdating}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -117,37 +135,26 @@ export const PhraseCard = ({
                 }}
               >
                 {isUpdating ? (
-                  <CircularProgress size={20} />
+                  <CircularProgress size={16} />
                 ) : (
-                  <StarIcon color={isFavorite ? "warning" : "disabled"} />
+                  <StarIcon
+                    color={isFavorite ? "warning" : "disabled"}
+                    fontSize="small"
+                  />
                 )}
               </IconButton>
             </Tooltip>
-            {/* Acciones (Editar / Eliminar) */}
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} />
+
+            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
           </Stack>
-        </Stack>
+        </Box>
 
-        {/* Metadatos */}
-        <Stack direction="row" spacing={2} sx={{ mt: 1 }} flexWrap="wrap">
-          {type && (
-            <Typography variant="subtitle2" color="text.secondary">
-              Tipo: <b>{type}</b>
-            </Typography>
-          )}
-          {createdAt && (
-            <Typography variant="caption" color="text.secondary">
-              Actualizado el: {formattedDate(updatedAt)}
-            </Typography>
-          )}
-        </Stack>
-
-        {/* Definición */}
+        {/* Contexto */}
         {context && (
           <Typography
-            variant="body1"
+            variant="body2"
+            color="text.secondary"
             sx={{
-              mt: 1,
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
@@ -177,32 +184,43 @@ export const PhraseCard = ({
           </Typography>
         )}
 
-        {/* Tags */}
-        {tags.length > 0 && (
-          <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mt: 2 }}>
+        {/* Footer: Etiquetas + Fecha */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={2}
+        >
+          <Stack direction="row" spacing={0.5} flexWrap="wrap">
             {tags.map((tag) => (
               <Chip
                 key={tag.id}
                 label={tag.name}
                 size="small"
-                variant="outlined"
                 sx={{
                   color: tag.color,
                   borderColor: tag.color,
                   backgroundColor: `${tag.color}20`,
                   textTransform: "capitalize",
+                  height: 24,
                 }}
               />
             ))}
           </Stack>
-        )}
+          {updatedAt && (
+            <Typography variant="caption" color="text.secondary">
+              {formattedDate(updatedAt)}
+            </Typography>
+          )}
+        </Stack>
       </CardContent>
 
+      {/* Diálogo */}
       <PhraseViewDialog
         open={isDialogOpen}
         onClose={(e) => handleClose(e)}
         phraseData={phrase}
-      ></PhraseViewDialog>
+      />
     </Card>
   );
 };

@@ -5,7 +5,6 @@ import { setUseIdiomatic } from "../store/slices/translatorSlice";
 export const IdiomaticToggle = () => {
   const dispatch = useDispatch();
   const idiomatic = useSelector((state) => state.translator.idiomatic);
-  console.log(idiomatic);
 
   return (
     <Tooltip title="Activar o desactivar expresiones idiomáticas">

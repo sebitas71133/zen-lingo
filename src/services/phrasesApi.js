@@ -31,6 +31,7 @@ export const phrasesApi = createApi({
         }
       },
       providesTags: ["Phrase"],
+      keepUnusedDataFor: 600, // 10 minutos
     }),
 
     addPhrase: builder.mutation({

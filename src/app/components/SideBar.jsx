@@ -13,6 +13,14 @@ import {
   Stack,
   useTheme,
 } from "@mui/material";
+
+import {
+  DashboardOutlined,
+  TranslateOutlined,
+  ChatBubbleOutlineOutlined,
+  RepeatOutlined,
+  MenuBookOutlined,
+} from "@mui/icons-material";
 import {
   Menu as MenuIcon,
   AccountCircle,
@@ -54,7 +62,7 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
             <AccountCircle fontSize="large" sx={{ color: "primary.main" }} />
             <Box>
               <Typography
-                variant="subtitle1"
+                variant="h6"
                 fontWeight="bold"
                 sx={{ color: "text.primary" }}
               >
@@ -69,37 +77,40 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
         <Divider />
 
         <List>
+          <ListItemButton onClick={() => navigate("/app/dashboard")}>
+            <ListItemIcon>
+              <DashboardOutlined sx={{ color: "text.primary" }} />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+
           <ListItemButton onClick={() => navigate("/app")}>
             <ListItemIcon>
-              <NotesOutlined sx={{ color: "text.primary" }} />
+              <TranslateOutlined sx={{ color: "text.primary" }} />
+              {/* o TextFieldsOutlined */}
             </ListItemIcon>
             <ListItemText primary="Words" />
           </ListItemButton>
 
-          <ListItemButton onClick={() => navigate("/app/tags")}>
-            <ListItemIcon>
-              <LabelOutlined sx={{ color: "text.primary" }} />
-            </ListItemIcon>
-            <ListItemText primary="Tags" />
-          </ListItemButton>
-
           <ListItemButton onClick={() => navigate("/app/phrase")}>
             <ListItemIcon>
-              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+              <ChatBubbleOutlineOutlined sx={{ color: "text.primary" }} />
             </ListItemIcon>
             <ListItemText primary="Phrases" />
           </ListItemButton>
 
           <ListItemButton onClick={() => navigate("/app/verbs")}>
             <ListItemIcon>
-              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+              <RepeatOutlined sx={{ color: "text.primary" }} />
+              {/* o FunctionsOutlined */}
             </ListItemIcon>
             <ListItemText primary="Verbs" />
           </ListItemButton>
 
           <ListItemButton onClick={() => navigate("/app/texts")}>
             <ListItemIcon>
-              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+              <MenuBookOutlined sx={{ color: "text.primary" }} />
+              {/* o ArticleOutlined */}
             </ListItemIcon>
             <ListItemText primary="Texts" />
           </ListItemButton>
@@ -109,6 +120,20 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
       {/* Bottom Section */}
       <Box>
         <Divider />
+        <ListItemButton onClick={() => navigate("/app/tags")}>
+          <ListItemIcon>
+            <LabelOutlined sx={{ color: "text.primary" }} />
+          </ListItemIcon>
+          <ListItemText primary="Tags" />
+        </ListItemButton>
+        <List>
+          <ListItemButton onClick={() => navigate("/app/tools")}>
+            <ListItemIcon>
+              <BuildCircleOutlined sx={{ color: "text.primary" }} />
+            </ListItemIcon>
+            <ListItemText primary="Tools" />
+          </ListItemButton>
+        </List>
         <List>
           <ListItemButton onClick={handleLogout}>
             <ListItemIcon>
@@ -128,7 +153,7 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
           onClick={handleDrawerToggle}
           sx={{
             position: "absolute",
-            top: 10,
+            top: 30,
             left: 10,
             zIndex: 1200,
             color: mobileOpen ? "primary.main" : "text.primary",

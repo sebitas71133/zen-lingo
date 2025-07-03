@@ -34,6 +34,8 @@ export const VerbPage = () => {
     );
   }
 
+  console.log({ verbs });
+
   if (isError) {
     return (
       <Typography
@@ -47,7 +49,7 @@ export const VerbPage = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 5 }}>
       {verbs.length === 0 ? (
         <Typography variant="h6" sx={{ mt: 3, textAlign: "center" }}>
           No hay verbos guardados todavía 😅

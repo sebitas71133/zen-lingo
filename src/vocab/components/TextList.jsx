@@ -102,7 +102,7 @@ export const TextList = ({ texts, showFilters }) => {
   }, [openForm]);
 
   return (
-    <Box sx={{ mt: 3 }} fullWidth>
+    <Box sx={{ mt: 3 }}>
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
           <Grid container spacing={2}>
@@ -169,7 +169,7 @@ export const TextList = ({ texts, showFilters }) => {
 
       <Grid container spacing={2}>
         {currentTexts.map((text) => (
-          <Grid item key={text.id} xs={12} sm={6}>
+          <Grid item key={text.id} xs={12} sm={6} md={4} lg={3}>
             <TextCard
               text={text}
               onEdit={() => handleEdit(text)}

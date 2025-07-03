@@ -8,7 +8,6 @@ export const DataStatus = ({
   errorText = "Ocurrió un error al cargar los datos 😢",
   emptyText = "No hay datos para mostrar 😅",
 }) => {
-  console.log({ isLoading });
   if (isLoading) {
     return (
       <Stack alignItems="center" mt={4}>

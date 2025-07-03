@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardContent,
   Chip,
@@ -57,36 +58,52 @@ export const TextCard = ({
         backgroundColor: isLearned ? "#2e7d3277" : `${typeColor}15`,
         borderColor: isLearned ? "#388e3c" : typeColor,
         mb: 2,
-        transition: "0.3s",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        borderLeft: `6px solid ${typeColor}`,
         boxShadow: `0 0 10px ${typeColor}30`,
+        transition: "0.3s",
         "&:hover": {
           boxShadow: `0 0 15px ${typeColor}55`,
+          scale: "1.03",
         },
-        borderLeft: `6px solid ${typeColor}`,
       }}
     >
-      <CardContent>
-        {/* Título + botones */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+      <CardContent sx={{ flexGrow: 1, p: 2 }}>
+        {/* Título */}
+        <Typography
+          variant="h6"
+          sx={{
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            whiteSpace: "break-word",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          title={title}
         >
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", textTransform: "capitalize" }}
-          >
-            {title}
-          </Typography>
+          {title}
+        </Typography>
 
-          <Stack direction="row" alignItems="center" spacing={1}>
+        {/* Acciones */}
+        <Box mt={1} mb={1}>
+          <Stack direction="row" spacing={0.5}>
             <Tooltip title="Ver texto completo">
-              <IconButton onClick={handleOpen}>
-                <VisibilityIcon />
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpen();
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
               </IconButton>
             </Tooltip>
+
             <Tooltip title={isLearned ? "Aprendido" : "Marcar como aprendido"}>
               <IconButton
+                size="small"
                 disabled={isUpdating}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -94,14 +111,19 @@ export const TextCard = ({
                 }}
               >
                 {isUpdating ? (
-                  <CircularProgress size={20} />
+                  <CircularProgress size={16} />
                 ) : (
-                  <CheckCircleIcon color={isLearned ? "success" : "disabled"} />
+                  <CheckCircleIcon
+                    color={isLearned ? "success" : "disabled"}
+                    fontSize="small"
+                  />
                 )}
               </IconButton>
             </Tooltip>
+
             <Tooltip title={isFavorite ? "Favorito" : "Marcar como favorito"}>
               <IconButton
+                size="small"
                 disabled={isUpdating}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -109,35 +131,24 @@ export const TextCard = ({
                 }}
               >
                 {isUpdating ? (
-                  <CircularProgress size={20} />
+                  <CircularProgress size={16} />
                 ) : (
-                  <StarIcon color={isFavorite ? "warning" : "disabled"} />
+                  <StarIcon
+                    color={isFavorite ? "warning" : "disabled"}
+                    fontSize="small"
+                  />
                 )}
               </IconButton>
             </Tooltip>
 
-            {/* Acciones */}
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} />
+            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
           </Stack>
-        </Stack>
+        </Box>
 
-        {/* Metadatos */}
-        <Stack direction="row" spacing={2} sx={{ mt: 1 }} flexWrap="wrap">
-          {type && (
-            <Typography variant="subtitle2" color="text.secondary">
-              Tipo: <b>{type}</b>
-            </Typography>
-          )}
-          {updatedAt && (
-            <Typography variant="caption" color="text.secondary">
-              Actualizado el: {formattedDate(updatedAt)}
-            </Typography>
-          )}
-        </Stack>
-
-        {/* Contenido resumido */}
+        {/* Contenido */}
         <Typography
           variant="body2"
+          color="text.secondary"
           sx={{
             mt: 1,
             display: "-webkit-box",
@@ -145,33 +156,46 @@ export const TextCard = ({
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            whiteSpace: "break-word",
           }}
         >
-          {originalText}
+          {originalText || "—"}
         </Typography>
 
-        {/* Tags */}
-        {tags.length > 0 && (
-          <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mt: 2 }}>
+        {/* Footer: Tags + Metadata */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={2}
+          flexWrap="wrap"
+          rowGap={1}
+        >
+          <Stack direction="row" spacing={0.5} flexWrap="wrap">
             {tags.map((tag) => (
               <Chip
                 key={tag.id}
                 label={tag.name}
                 size="small"
-                variant="outlined"
                 sx={{
                   color: tag.color,
                   borderColor: tag.color,
                   backgroundColor: `${tag.color}20`,
                   textTransform: "capitalize",
+                  height: 24,
                 }}
               />
             ))}
           </Stack>
-        )}
+          {(type || updatedAt) && (
+            <Typography variant="caption" color="text.secondary">
+              {type && <b>{type}</b>} {type && updatedAt && " • "}
+              {updatedAt && `Actualizado el: ${formattedDate(updatedAt)}`}
+            </Typography>
+          )}
+        </Stack>
       </CardContent>
 
-      {/* Diálogo */}
       <TextViewDialog
         open={isDialogOpen}
         onClose={handleClose}

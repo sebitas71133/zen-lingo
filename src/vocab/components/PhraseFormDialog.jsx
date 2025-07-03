@@ -83,7 +83,6 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
 
   // Envío
   const onSubmit = async (data) => {
-    console.log({ data });
     const payload = { ...data, updatedAt: new Date().toISOString() };
     if (initialData?.id) {
       await updatePhraseById(initialData.id, payload);

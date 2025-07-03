@@ -23,8 +23,6 @@ export const AuthProvider = ({ children }) => {
         const { uid, email, displayName, photoURL } = user;
         dispatch(login({ uid, email, displayName, photoURL }));
 
-        console.log({ uid, email, displayName, photoURL });
-
         // dispatch(updateRoleUser());
         // dispatch(getRegisteredUsers()); // Cargar usuarios registrados
       } else {

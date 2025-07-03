@@ -82,8 +82,6 @@ export const Navbar = () => {
   };
 
   const handleNavigate = (path) => {
-    //  console.log(path);
-
     navigate(path);
     setAnchorElNav(null);
   };

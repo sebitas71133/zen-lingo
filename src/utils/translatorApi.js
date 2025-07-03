@@ -108,20 +108,14 @@ export const translatorApi = async (
      }
       Responde sin explicaciones ni texto adicional.`;
   try {
-    console.log(prompt);
-
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    console.log(response);
 
     const translatedText = await response.text();
-    console.log(translatedText);
 
     if (translatedText.includes("[blocked]")) {
       return "La respuesta no pudo generarse debido a restricciones de seguridad.";
     }
-
-    // console.log(translatedText);
 
     // const resultJSON = await JSON.parse(translatedText);
 

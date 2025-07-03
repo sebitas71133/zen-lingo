@@ -10,12 +10,11 @@ main {
   background-position: center;
   background-attachment: fixed;
 }
-/* #root {
-  max-width: 1280px;
+
+#root {
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
+/* 
 
 
 
