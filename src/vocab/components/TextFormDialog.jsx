@@ -28,7 +28,7 @@ const DEFAULT_VALUES = {
   type: "",
 };
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const TextFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();

@@ -33,8 +33,6 @@ export const TextPage = () => {
     );
   }
 
-  console.log({ texts });
-
   if (isError) {
     return (
       <Typography

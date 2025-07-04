@@ -4,7 +4,9 @@ import { usePhraseStore } from "../hooks/usePhraseStore";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import Swal from "sweetalert2";
 import {
+  Autocomplete,
   Box,
+  Chip,
   Collapse,
   Container,
   Grid,
@@ -19,46 +21,37 @@ import { usePagination } from "../hooks/usePagination";
 import { PhraseCard } from "./PhraseCard";
 import { PhraseFormDialog } from "./PhraseFormDialog";
 import { phraseTypeColors } from "../utils/wordTypes";
+import { useTagStore } from "../hooks/useTagStore";
+import { useFiltered } from "../hooks/useFiltered";
 
 export const PhraseList = ({ phrases, showFilters }) => {
-  const [searchName, setSearchName] = useState("");
-
-  const [order, setOrder] = useState("asc");
-
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-
-  const [type, setType] = useState("");
-
-  let filtered = [...phrases];
-
-  if (searchName) {
-    filtered = filtered.filter((phrase) =>
-      phrase.phrase.toLowerCase().includes(searchName.toLowerCase())
-    );
-  }
-
-  if (type) {
-    filtered = filtered.filter(
-      (word) => word.type?.toLowerCase() === type.toLowerCase()
-    );
-  }
-
-  if (order) {
-    filtered.sort((a, b) =>
-      order === "asc"
-        ? a.phrase.localeCompare(b.phrase)
-        : b.phrase.localeCompare(a.phrase)
-    );
-  }
-
   const dispatch = useDispatch();
+
+  // Obtener tags
+  const { tags = [], isLoading } = useTagStore();
+
+  // Uso del hook personalizado con filtros y data filtrada
+  const {
+    search,
+    type,
+    order,
+    itemsPerPage,
+    selectedTags,
+    setSearch,
+    setType,
+    setOrder,
+    setItemsPerPage,
+    setSelectedTags,
+
+    filteredItems,
+  } = useFiltered(phrases, "phrase", localStorage.getItem("phrase_page") ?? 6);
 
   const {
     currentPageData: currentPhrases,
     page,
     setPage,
     totalPages,
-  } = usePagination(filtered, itemsPerPage);
+  } = usePagination(filteredItems, itemsPerPage);
 
   const { phraseEditForm: openForm } = useSelector((state) => state.ui.dialogs);
 
@@ -114,22 +107,22 @@ export const PhraseList = ({ phrases, showFilters }) => {
   }, [openForm]);
 
   return (
-    <Container sx={{ mt: 5 }}>
-      {/* FILTERS */}
+    <Box sx={{ mt: 4 }}>
+      <Box sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Buscar"
+            size="small"
+            fullWidth
+            variant="outlined"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          ></TextField>
+        </Grid>
+      </Box>
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                label="Buscar"
-                size="small"
-                fullWidth
-                variant="outlined"
-                value={searchName}
-                onChange={(e) => setSearchName(e.target.value)}
-              ></TextField>
-            </Grid>
-
             <Grid item xs={6} sm={4} md={2}>
               <TextField
                 label="Dirección"
@@ -188,6 +181,35 @@ export const PhraseList = ({ phrases, showFilters }) => {
                 ))}
               </TextField>
             </Grid>
+            {/* Fila 2: Etiquetas */}
+            <Grid item xs={12} md={2}>
+              <Autocomplete
+                multiple
+                options={tags}
+                getOptionLabel={(option) => option.name}
+                value={selectedTags}
+                onChange={(event, newValue) => setSelectedTags(newValue)}
+                loading={isLoading}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      variant="outlined"
+                      label={option.name}
+                      {...getTagProps({ index })}
+                      key={option.id}
+                    />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Etiquetas"
+                    size="small"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
           </Grid>
         </Box>
       </Collapse>
@@ -226,6 +248,6 @@ export const PhraseList = ({ phrases, showFilters }) => {
           initialData={wordToEdit}
         />
       </Box>
-    </Container>
+    </Box>
   );
 };

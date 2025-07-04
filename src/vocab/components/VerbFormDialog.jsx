@@ -52,7 +52,7 @@ const DEFAULT_VALUES = {
   },
 };
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const VerbFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();

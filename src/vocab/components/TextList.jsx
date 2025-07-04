@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import Swal from "sweetalert2";
 import {
+  Autocomplete,
   Box,
+  Chip,
   Collapse,
+  Container,
   Grid,
   MenuItem,
   Pagination,
@@ -16,42 +19,37 @@ import { usePagination } from "../hooks/usePagination";
 import { useTextStore } from "../hooks/useTextStore";
 import { TextCard } from "./TextCard";
 import { TextFormDialog } from "./TextFormDialog";
+import { useTagStore } from "../hooks/useTagStore";
+
+import { useFiltered } from "../hooks/useFiltered";
 
 export const TextList = ({ texts, showFilters }) => {
-  const [search, setSearch] = useState("");
-  const [order, setOrder] = useState("asc");
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [type, setType] = useState("");
-
-  let filtered = [...texts];
-
-  if (search) {
-    filtered = filtered.filter((t) =>
-      t.title.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  if (type) {
-    filtered = filtered.filter(
-      (t) => t.type?.toLowerCase() === type.toLowerCase()
-    );
-  }
-
-  if (order) {
-    filtered.sort((a, b) =>
-      order === "asc"
-        ? a.title.localeCompare(b.title)
-        : b.title.localeCompare(a.title)
-    );
-  }
-
   const dispatch = useDispatch();
+
+  // Obtener tags
+  const { tags = [], isLoading } = useTagStore();
+
+  const {
+    search,
+    type,
+    order,
+    itemsPerPage,
+    selectedTags,
+    setSearch,
+    setType,
+    setOrder,
+    setItemsPerPage,
+    setSelectedTags,
+
+    filteredItems,
+  } = useFiltered(texts, "title", localStorage.getItem("text_page") ?? 6);
+
   const {
     currentPageData: currentTexts,
     page,
     setPage,
     totalPages,
-  } = usePagination(filtered, itemsPerPage);
+  } = usePagination(filteredItems, itemsPerPage);
 
   const { textEditForm: openForm } = useSelector((state) => state.ui.dialogs);
 
@@ -102,19 +100,21 @@ export const TextList = ({ texts, showFilters }) => {
   }, [openForm]);
 
   return (
-    <Box sx={{ mt: 3 }}>
+    <Box sx={{ mt: 4 }}>
+      <Box sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Buscar texto"
+            size="small"
+            fullWidth
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Grid>
+      </Box>
       <Collapse in={showFilters}>
         <Box sx={{ mb: 5 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                label="Buscar texto"
-                size="small"
-                fullWidth
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </Grid>
             <Grid item xs={6} sm={4} md={2}>
               <TextField
                 label="Dirección"
@@ -162,6 +162,35 @@ export const TextList = ({ texts, showFilters }) => {
                 <MenuItem value="diálogo">diálogo</MenuItem>
                 <MenuItem value="otro">otro</MenuItem>
               </TextField>
+            </Grid>
+            {/* Fila 2: Etiquetas */}
+            <Grid item xs={12} md={2}>
+              <Autocomplete
+                multiple
+                options={tags}
+                getOptionLabel={(option) => option.name}
+                value={selectedTags}
+                onChange={(event, newValue) => setSelectedTags(newValue)}
+                loading={isLoading}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      variant="outlined"
+                      label={option.name}
+                      {...getTagProps({ index })}
+                      key={option.id}
+                    />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Etiquetas"
+                    size="small"
+                    fullWidth
+                  />
+                )}
+              />
             </Grid>
           </Grid>
         </Box>

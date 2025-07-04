@@ -18,7 +18,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import LabelIcon from "@mui/icons-material/Label";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const WordViewDialog = ({ open, onClose, wordData }) => {
   if (!wordData) return null;

@@ -29,7 +29,7 @@ const DEFAULT_VALUES = {
   tags: [],
 };
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const PhraseFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();

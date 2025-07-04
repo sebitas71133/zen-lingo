@@ -31,7 +31,7 @@ const DEFAULT_VALUES = {
 };
 
 // Componente animado
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const WordFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();
