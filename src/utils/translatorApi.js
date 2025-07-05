@@ -9,20 +9,20 @@ const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
 const safetySettings = [
   {
     category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Más restrictivo
+    threshold: HarmBlockThreshold.BLOCK_NONE, //NO Más restrictivo
   },
   {
     category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Mayor control
+    threshold: HarmBlockThreshold.BLOCK_NONE, //NO Mayor control
   },
 
   {
     category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, // Evitar contenido sexual explícito
+    threshold: HarmBlockThreshold.BLOCK_NONE, // NO Evitar contenido sexual explícito
   },
   {
     category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, // Evitar consejos peligrosos
+    threshold: HarmBlockThreshold.BLOCK_NONE, //NO Evitar consejos peligrosos
   },
 ];
 

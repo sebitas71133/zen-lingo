@@ -16,7 +16,7 @@ import { WordCard } from "./WordCard";
 
 import { WordFormDialog } from "./WordFormDialog";
 
-import { useWordStore } from "../hooks/useWordStoreQuery";
+import { useWordStore } from "../hooks/useWordStore";
 
 import { useDispatch, useSelector } from "react-redux";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";

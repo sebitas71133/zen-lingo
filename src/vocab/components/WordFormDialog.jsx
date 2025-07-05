@@ -14,10 +14,13 @@ import {
   CircularProgress,
   useTheme,
 } from "@mui/material";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { motion } from "framer-motion";
 import { Controller, useForm } from "react-hook-form";
 import { useTagStore } from "../hooks/useTagStore";
-import { useWordStore } from "../hooks/useWordStoreQuery";
+import { useWordStore } from "../hooks/useWordStore";
+import { translatorApi } from "../utils/gemini/translatorApi";
+import { handleSpeak } from "../utils/gemini/handleSpeak";
 
 // CONSTANTES
 const WORD_TYPES = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
@@ -39,6 +42,9 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
   // Estado local
   const [exampleInput, setExampleInput] = useState("");
 
+  //Para la llamada a gemini
+  const [loading, setLoading] = useState(false);
+
   // Hooks de datos
   const { tags: allTags = [], isLoading: loadingTags } = useTagStore();
   const { createWord, updateWordById, isAdding, isUpdating } = useWordStore();
@@ -50,6 +56,7 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
     reset,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: DEFAULT_VALUES,
@@ -97,6 +104,30 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
     onClose();
   };
 
+  const handleAutoFill = async () => {
+    const translation = getValues("translation").trim();
+    if (!translation) return;
+    setLoading(true);
+    try {
+      // Llamada a API Gemini
+      const result = await translatorApi(translation, "word");
+
+      if (result) {
+        if (result.word) setValue("word", result.word);
+        if (result.type) setValue("type", result.type);
+        if (result.definition) setValue("definition", result.definition);
+        if (result.examples && Array.isArray(result.examples)) {
+          setValue("examples", result.examples);
+          setExampleInput("");
+        }
+      }
+    } catch (error) {
+      console.error("Error al autocompletar con Gemini:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <MotionBox
@@ -121,22 +152,6 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
 
           <DialogContent dividers>
             <Stack spacing={2}>
-              {/* Palabra */}
-              <Controller
-                name="word"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Palabra"
-                    fullWidth
-                    error={!!errors.word}
-                    helperText={errors.word?.message}
-                  />
-                )}
-              />
-
               {/* Traducción */}
               <Controller
                 name="translation"
@@ -145,13 +160,54 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Traducción"
+                    label="Palabra en Español"
                     fullWidth
                     error={!!errors.translation}
                     helperText={errors.translation?.message}
                   />
                 )}
               />
+
+              {/* Boton para autocompletar con IA */}
+
+              {watch("translation") && (
+                <Button
+                  variant="outlined"
+                  onClick={handleAutoFill}
+                  loading={loading}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  ✨ Autocompletar con IA
+                </Button>
+              )}
+
+              {/* Palabra */}
+              <Controller
+                name="word"
+                control={control}
+                rules={{ required: "Campo obligatorio" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Palabra en Ingles"
+                    fullWidth
+                    error={!!errors.word}
+                    helperText={errors.word?.message}
+                    multiline
+                    maxRows={4}
+                  />
+                )}
+              />
+
+              {watch("word") && (
+                <Button
+                  variant="outlined"
+                  startIcon={<VolumeUpIcon />}
+                  onClick={() => handleSpeak({ text: watch("word") })}
+                >
+                  Escuchar
+                </Button>
+              )}
 
               {/* Tipo */}
               <Controller
@@ -200,6 +256,8 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                     onChange={(e) => setExampleInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddExample()}
                     fullWidth
+                    multiline
+                    maxRows={4}
                   />
                   <Button
                     variant="outlined"
@@ -210,7 +268,7 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                   </Button>
                 </Stack>
                 <Stack direction="row" flexWrap="wrap" spacing={1} mt={1}>
-                  {getValues("examples")?.map((ex, i) => (
+                  {watch("examples")?.map((ex, i) => (
                     <Chip
                       key={i}
                       label={ex}
@@ -233,23 +291,37 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                     multiple
                     options={allTags}
                     getOptionLabel={(opt) => opt.name}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
+                    filterSelectedOptions
                     loading={loadingTags}
                     value={field.value}
-                    onChange={(_, v) => field.onChange(v)}
+                    onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Etiquetas"
                         placeholder="Selecciona..."
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loadingTags && <CircularProgress size={20} />}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Etiquetas"
+                            placeholder="Selecciona..."
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <>
+                                    {loadingTags && (
+                                      <CircularProgress size={20} />
+                                    )}
+                                    {params.InputProps?.endAdornment}
+                                  </>
+                                ),
+                              },
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />

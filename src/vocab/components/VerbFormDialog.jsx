@@ -18,11 +18,14 @@ import {
   useTheme,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import React, { useEffect, useState } from "react";
 import { useTagStore } from "../hooks/useTagStore";
 import { useVerbStore } from "../hooks/useVerbStore";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { handleSpeak } from "../utils/gemini/handleSpeak";
+import { translatorApi } from "../utils/gemini/translatorApi";
 
 const VERB_TYPES = ["regular", "irregular"];
 const DEFAULT_VALUES = {
@@ -57,6 +60,9 @@ const MotionBox = motion.create(Box);
 export const VerbFormDialog = ({ open, onClose, initialData }) => {
   const theme = useTheme();
   const [exampleInput, setExampleInput] = useState("");
+
+  //Para la llamada a gemini
+  const [loading, setLoading] = useState(false);
 
   const { tags: allTags = [], isLoading: loadingTags } = useTagStore();
   const { createVerb, updateVerbById, isAdding, isUpdating } = useVerbStore();
@@ -112,6 +118,86 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
     onClose();
   };
 
+  const handleAutoFill = async () => {
+    const translation = getValues("translation").trim();
+    if (!translation) return;
+
+    setLoading(true);
+    try {
+      // Llamada a API Gemini (o tu función generadora)
+      const result = await translatorApi(translation, "verb");
+      console.log({ result });
+      if (result) {
+        // Campos simples
+        if (result.verb) setValue("verb", result.verb);
+        // if (result.type) setValue("type", result.type);
+        if (result.examples && Array.isArray(result.examples)) {
+          setValue("examples", result.examples);
+          setExampleInput("");
+        }
+
+        // Conjugaciones
+        if (result.conjugations) {
+          const conj = result.conjugations;
+
+          if (conj.base) setValue("conjugations.base", conj.base);
+          if (conj.thirdPerson)
+            setValue("conjugations.thirdPerson", conj.thirdPerson);
+          if (conj.past) setValue("conjugations.past", conj.past);
+          if (conj.pastParticiple)
+            setValue("conjugations.pastParticiple", conj.pastParticiple);
+          if (conj.presentParticiple)
+            setValue("conjugations.presentParticiple", conj.presentParticiple);
+
+          if (
+            result?.tenses?.past &&
+            result?.tenses?.pastParticiple &&
+            result?.tenses?.present
+          ) {
+            const isRegular = isRegularVerb(
+              result?.tenses?.past.toLowerCase().trim(),
+              result?.tenses?.pastParticiple.toLowerCase().trim(),
+              result?.tenses?.present.toLowerCase().trim()
+            );
+            console.log(isRegular);
+            setValue("type", isRegular ? "regular" : "irregular");
+          } else if (result.type) {
+            // Fallback si no puedes validar
+            setValue("type", result.type);
+          }
+
+          // Futuro
+          if (conj.future) {
+            if (conj.future.simple)
+              setValue("conjugations.future.simple", conj.future.simple);
+            if (conj.future.goingTo)
+              setValue("conjugations.future.goingTo", conj.future.goingTo);
+          }
+
+          // Modales
+          if (conj.modals) {
+            if (conj.modals.can)
+              setValue("conjugations.modals.can", conj.modals.can);
+            if (conj.modals.could)
+              setValue("conjugations.modals.could", conj.modals.could);
+            if (conj.modals.would)
+              setValue("conjugations.modals.would", conj.modals.would);
+            if (conj.modals.should)
+              setValue("conjugations.modals.should", conj.modals.should);
+            if (conj.modals.might)
+              setValue("conjugations.modals.might", conj.modals.might);
+            if (conj.modals.must)
+              setValue("conjugations.modals.must", conj.modals.must);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error al autocompletar con Gemini:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const examples = watch("examples");
 
   return (
@@ -138,6 +224,35 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
 
           <DialogContent dividers>
             <Stack spacing={2}>
+              {/* Traducción */}
+              <Controller
+                name="translation"
+                control={control}
+                rules={{ required: "Campo obligatorio" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Verbo en español"
+                    fullWidth
+                    error={!!errors.translation}
+                    helperText={errors.translation?.message}
+                    multiline
+                    maxRows={4}
+                  />
+                )}
+              />
+              {/* Boton para autocompletar con IA */}
+
+              {watch("translation") && (
+                <Button
+                  variant="outlined"
+                  onClick={handleAutoFill}
+                  loading={loading}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  ✨ Autocompletar con IA
+                </Button>
+              )}
               {/* Verbo */}
               <Controller
                 name="verb"
@@ -154,21 +269,15 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                 )}
               />
 
-              {/* Traducción */}
-              <Controller
-                name="translation"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Traducción"
-                    fullWidth
-                    error={!!errors.translation}
-                    helperText={errors.translation?.message}
-                  />
-                )}
-              />
+              {watch("verb") && (
+                <Button
+                  variant="outlined"
+                  startIcon={<VolumeUpIcon />}
+                  onClick={() => handleSpeak({ text: watch("verb") })}
+                >
+                  Escuchar
+                </Button>
+              )}
 
               {/* Tipo */}
               <Controller
@@ -202,6 +311,8 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                     onChange={(e) => setExampleInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddExample()}
                     fullWidth
+                    multiline
+                    maxRows={4}
                   />
                   <Button
                     variant="outlined"
@@ -250,7 +361,13 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                         name={`conjugations.${name}`}
                         control={control}
                         render={({ field }) => (
-                          <TextField {...field} label={label} fullWidth />
+                          <TextField
+                            {...field}
+                            label={label}
+                            fullWidth
+                            multiline
+                            maxRows={4}
+                          />
                         )}
                       />
                     ))}
@@ -270,7 +387,13 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                         name={`conjugations.future.${name}`}
                         control={control}
                         render={({ field }) => (
-                          <TextField {...field} label={label} fullWidth />
+                          <TextField
+                            {...field}
+                            label={label}
+                            fullWidth
+                            multiline
+                            maxRows={4}
+                          />
                         )}
                       />
                     ))}
@@ -294,7 +417,13 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                         name={`conjugations.modals.${name}`}
                         control={control}
                         render={({ field }) => (
-                          <TextField {...field} label={label} fullWidth />
+                          <TextField
+                            {...field}
+                            label={label}
+                            fullWidth
+                            multiline
+                            maxRows={4}
+                          />
                         )}
                       />
                     ))}
@@ -308,18 +437,40 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                 control={control}
                 render={({ field }) => (
                   <Autocomplete
-                    {...field}
                     multiple
                     options={allTags}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(opt) => opt.name}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
+                    filterSelectedOptions
                     loading={loadingTags}
-                    value={field.value || []}
+                    value={field.value}
                     onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Etiquetas"
-                        placeholder="Seleccionar etiquetas"
+                        placeholder="Selecciona..."
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Etiquetas"
+                            placeholder="Selecciona..."
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <>
+                                    {loadingTags && (
+                                      <CircularProgress size={20} />
+                                    )}
+                                    {params.InputProps?.endAdornment}
+                                  </>
+                                ),
+                              },
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />
@@ -349,4 +500,10 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
       </MotionBox>
     </Dialog>
   );
+};
+
+const isRegularVerb = (past, pastParticiple, base) => {
+  const edForm = base + "ed";
+  console.log({ edForm, past, pastParticiple });
+  return past === edForm && pastParticiple === edForm;
 };

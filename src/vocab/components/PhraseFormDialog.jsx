@@ -18,15 +18,14 @@ import { useTagStore } from "../hooks/useTagStore";
 import { usePhraseStore } from "../hooks/usePhraseStore";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { translatorApi } from "../utils/gemini/translatorApi";
 
 const WORD_TYPES = ["phrases", "idioms"];
 const DEFAULT_VALUES = {
   phrase: "",
-  translation: "",
   type: "",
   context: "",
   examples: [],
-  tags: [],
 };
 
 const MotionBox = motion.create(Box);
@@ -36,6 +35,9 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
 
   // Estado local
   const [exampleInput, setExampleInput] = useState("");
+
+  //Para la llamada a gemini
+  const [loading, setLoading] = useState(false);
 
   const { tags: allTags = [], isLoading: loadingTags } = useTagStore();
 
@@ -97,6 +99,39 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     onClose();
   };
 
+  const handleAutoFill = async () => {
+    const translation = getValues("phrase").trim();
+    if (!translation) return;
+
+    setLoading(true);
+    try {
+      // Llamada a API Gemini con tipo "phrase"
+      const result = await translatorApi(translation, "phrase");
+      console.log({ result });
+      if (result) {
+        // if (result.phrase) setValue("phrase", result.phrase);
+        if (result.type)
+          setValue(
+            "type",
+            result.type === "phrasal verb"
+              ? "phrases"
+              : result.type === "idiom"
+              ? "idioms"
+              : result.type
+          );
+        if (result.context) setValue("context", result.context);
+        if (result.examples && Array.isArray(result.examples)) {
+          setValue("examples", result.examples);
+          setExampleInput("");
+        }
+      }
+    } catch (error) {
+      console.error("Error al autocompletar con Gemini:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const examples = watch("examples");
 
   return (
@@ -137,25 +172,22 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                     fullWidth
                     error={!!errors.phrase}
                     helperText={errors.phrase?.message}
+                    multiline
+                    maxRows={4}
                   />
                 )}
               />
 
-              {/* Traducción */}
-              <Controller
-                name="translation"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Traducción"
-                    fullWidth
-                    error={!!errors.translation}
-                    helperText={errors.translation?.message}
-                  />
-                )}
-              />
+              {watch("phrase") && (
+                <Button
+                  variant="outlined"
+                  onClick={handleAutoFill}
+                  loading={loading}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  ✨ Autocompletar con IA
+                </Button>
+              )}
 
               {/* Tipo */}
               <Controller
@@ -204,6 +236,8 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                     onChange={(e) => setExampleInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddExample()}
                     fullWidth
+                    multiline
+                    maxRows={4}
                   />
                   <Button
                     variant="outlined"
@@ -229,6 +263,7 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               </Box>
 
               {/* Tags */}
+              {/* Tags */}
               <Controller
                 name="tags"
                 control={control}
@@ -237,23 +272,37 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                     multiple
                     options={allTags}
                     getOptionLabel={(opt) => opt.name}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
+                    filterSelectedOptions
                     loading={loadingTags}
                     value={field.value}
-                    onChange={(_, v) => field.onChange(v)}
+                    onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Etiquetas"
                         placeholder="Selecciona..."
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loadingTags && <CircularProgress size={20} />}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Etiquetas"
+                            placeholder="Selecciona..."
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <>
+                                    {loadingTags && (
+                                      <CircularProgress size={20} />
+                                    )}
+                                    {params.InputProps?.endAdornment}
+                                  </>
+                                ),
+                              },
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />

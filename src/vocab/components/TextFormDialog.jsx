@@ -100,6 +100,8 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                     fullWidth
                     error={!!errors.title}
                     helperText={errors.title?.message}
+                    multiline
+                    maxRows={4}
                   />
                 )}
               />
@@ -117,6 +119,8 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                     fullWidth
                     error={!!errors.type}
                     helperText={errors.type?.message}
+                    multiline
+                    maxRows={4}
                   >
                     {TEXT_TYPES.map((option) => (
                       <MenuItem key={option} value={option}>
@@ -137,7 +141,7 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                     {...field}
                     label="Texto en inglés"
                     multiline
-                    minRows={4}
+                    minRows={10}
                     fullWidth
                     error={!!errors.originalText}
                     helperText={errors.originalText?.message}
@@ -155,7 +159,7 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                     {...field}
                     label="Traducción"
                     multiline
-                    minRows={4}
+                    minRows={10}
                     fullWidth
                     error={!!errors.translation}
                     helperText={errors.translation?.message}
@@ -177,25 +181,46 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                   />
                 )}
               />
-
-              {/* Etiquetas */}
+              {/* Tags */}
               <Controller
                 name="tags"
                 control={control}
                 render={({ field }) => (
                   <Autocomplete
-                    {...field}
                     multiple
                     options={allTags}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(opt) => opt.name}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
+                    filterSelectedOptions
                     loading={loadingTags}
-                    value={field.value || []}
+                    value={field.value}
                     onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Etiquetas"
-                        placeholder="Seleccionar etiquetas"
+                        placeholder="Selecciona..."
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Etiquetas"
+                            placeholder="Selecciona..."
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <>
+                                    {loadingTags && (
+                                      <CircularProgress size={20} />
+                                    )}
+                                    {params.InputProps?.endAdornment}
+                                  </>
+                                ),
+                              },
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />
