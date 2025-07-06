@@ -26,6 +26,7 @@ import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { handleSpeak } from "../utils/gemini/handleSpeak";
 import { translatorApi } from "../utils/gemini/translatorApi";
+import { SpeakWord } from "../../components/SpeakWord";
 
 const VERB_TYPES = ["regular", "irregular"];
 const DEFAULT_VALUES = {
@@ -248,37 +249,31 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                   variant="outlined"
                   onClick={handleAutoFill}
                   loading={loading}
-                  sx={{ alignSelf: "flex-start" }}
                 >
                   ✨ Autocompletar con IA
                 </Button>
               )}
               {/* Verbo */}
-              <Controller
-                name="verb"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Verbo en inglés"
-                    fullWidth
-                    error={!!errors.verb}
-                    helperText={errors.verb?.message}
-                  />
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="verb"
+                  control={control}
+                  rules={{ required: "Campo obligatorio" }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Verbo en inglés"
+                      fullWidth
+                      error={!!errors.verb}
+                      helperText={errors.verb?.message}
+                    />
+                  )}
+                />
+
+                {watch("verb") && (
+                  <SpeakWord textToSpeak={watch("verb")}></SpeakWord>
                 )}
-              />
-
-              {watch("verb") && (
-                <Button
-                  variant="outlined"
-                  startIcon={<VolumeUpIcon />}
-                  onClick={() => handleSpeak({ text: watch("verb") })}
-                >
-                  Escuchar
-                </Button>
-              )}
-
+              </Stack>
               {/* Tipo */}
               <Controller
                 name="type"

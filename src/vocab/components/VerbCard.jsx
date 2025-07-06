@@ -18,6 +18,7 @@ import { formattedDate } from "../utils/formatedDate";
 import { WordCardActions } from "./WordCardActions";
 import { WordViewDialog } from "./WordViewDialog";
 import { verbTypeColors } from "../utils/wordTypes";
+import { VerbViewDialog } from "./VerbViewDialog";
 
 export const VerbCard = ({
   verb,
@@ -186,10 +187,10 @@ export const VerbCard = ({
       </CardContent>
 
       {/* Diálogo de vista */}
-      <WordViewDialog
+      <VerbViewDialog
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        wordData={verb}
+        verbData={verb}
       />
     </Card>
   );

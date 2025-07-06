@@ -20,7 +20,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useTagStore } from "../hooks/useTagStore";
 import { useWordStore } from "../hooks/useWordStore";
 import { translatorApi } from "../utils/gemini/translatorApi";
-import { handleSpeak } from "../utils/gemini/handleSpeak";
+
+import { SpeakWord } from "../../components/SpeakWord";
 
 // CONSTANTES
 const WORD_TYPES = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
@@ -175,39 +176,36 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                   variant="outlined"
                   onClick={handleAutoFill}
                   loading={loading}
-                  sx={{ alignSelf: "flex-start" }}
+                  // sx={{ alignSelf: "flex-start" }}
                 >
                   ✨ Autocompletar con IA
                 </Button>
               )}
 
               {/* Palabra */}
-              <Controller
-                name="word"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Palabra en Ingles"
-                    fullWidth
-                    error={!!errors.word}
-                    helperText={errors.word?.message}
-                    multiline
-                    maxRows={4}
-                  />
-                )}
-              />
 
-              {watch("word") && (
-                <Button
-                  variant="outlined"
-                  startIcon={<VolumeUpIcon />}
-                  onClick={() => handleSpeak({ text: watch("word") })}
-                >
-                  Escuchar
-                </Button>
-              )}
+              <Stack direction={"row"} spacing={1} mt={1} alignItems={"center"}>
+                <Controller
+                  name="word"
+                  control={control}
+                  rules={{ required: "Campo obligatorio" }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Palabra en Ingles"
+                      fullWidth
+                      error={!!errors.word}
+                      helperText={errors.word?.message}
+                      multiline
+                      maxRows={4}
+                    />
+                  )}
+                />
+
+                {watch("word") && (
+                  <SpeakWord textToSpeak={watch("word")}></SpeakWord>
+                )}
+              </Stack>
 
               {/* Tipo */}
               <Controller
@@ -233,19 +231,32 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
               />
 
               {/* Definición */}
-              <Controller
-                name="definition"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Definición (opcional)"
-                    fullWidth
-                    multiline
-                    rows={3}
-                  />
+
+              <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+                <Controller
+                  name="definition"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Definición (opcional)"
+                      fullWidth
+                      multiline
+                      rows={3}
+                    />
+                  )}
+                />{" "}
+                {watch("definition") && (
+                  <SpeakWord textToSpeak={watch("definition")}></SpeakWord>
                 )}
-              />
+              </Stack>
+
+              {/* <Stack
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                mt={1}
+              ></Stack> */}
 
               {/* Ejemplos */}
               <Box>

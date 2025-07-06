@@ -1,6 +1,6 @@
-export const getPromptByType = (type = "", translation) => {
+export const getPromptByType = (type = "", translation, typeText = "") => {
   let prompt = "";
-
+  console.log({ type, translation, typeText });
   switch (type) {
     case "word":
       prompt = `Quiero que analices la palabra o frase "${translation}" y me devuelvas solo un objeto JSON que contenga los siguientes campos para llenar un formulario:
@@ -72,6 +72,25 @@ export const getPromptByType = (type = "", translation) => {
         }
         Todos los ejemplos no deben ser tan breves y en ingles
         No incluyas texto adicional ni explicaciones, solo responde con el JSON directamente.`;
+
+      break;
+
+    case "text":
+      prompt = `Quiero que generes un objeto JSON basado en el siguiente título en español: "${translation}", el cual representa un texto de tipo "${typeText}". Usa ese título como inspiración para crear un contenido original en inglés.
+
+Debes devolver únicamente un objeto JSON con esta estructura (sin explicaciones ni texto fuera del JSON):
+
+{
+  "originalText": "Contenido original en inglés, bien redactado, relacionado con el título y tipo de texto.",
+  "translation": "Traducción fiel del texto al español, manteniendo estilo y significado.",
+  "notes": "Notas breves sobre el contenido generado, su estilo, tono o intención separado por comas."
+}
+
+Requisitos estrictos:
+- El campo "originalText" debe ser 100% en inglés, no una traducción del título, sino un desarrollo creativo o narrativo relacionado.
+- El contenido debe tener una extensión razonable (no muy corto).
+- Asegúrate de que el JSON esté **bien formado y cerrado correctamente**, sin caracteres sueltos ni errores de sintaxis.
+- No incluyas explicaciones, comentarios ni texto adicional fuera del JSON. Solo responde con el JSON, y nada más.`;
 
       break;
 

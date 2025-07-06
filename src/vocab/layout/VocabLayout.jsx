@@ -4,6 +4,7 @@ import { Box, Toolbar } from "@mui/material";
 import { useAuthStore } from "../../auth/hooks/useAuthStore";
 import { SideBar } from "../../app/components/SideBar";
 import { NavbarUser } from "../../app/components/NavbarUser";
+import { ToastContainer } from "react-toastify";
 
 const drawerWidth = 280;
 
@@ -32,6 +33,7 @@ export const VocabLayout = () => {
         //
         //   }}
         ></Outlet>
+        <ToastContainer position="top-right" autoClose={3000} />
       </Box>
     </Box>
   );

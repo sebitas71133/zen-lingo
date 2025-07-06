@@ -19,6 +19,7 @@ import { usePhraseStore } from "../hooks/usePhraseStore";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { translatorApi } from "../utils/gemini/translatorApi";
+import { SpeakWord } from "../../components/SpeakWord";
 
 const WORD_TYPES = ["phrases", "idioms"];
 const DEFAULT_VALUES = {
@@ -159,31 +160,35 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
           <DialogContent dividers>
             <Stack spacing={2}>
               {/* Frase */}
-              <Controller
-                name="phrase"
-                control={control}
-                rules={{ required: "Campo obligatorio" }}
-                fullWidth
-                multiline
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Frase o Idiomatica"
-                    fullWidth
-                    error={!!errors.phrase}
-                    helperText={errors.phrase?.message}
-                    multiline
-                    maxRows={4}
-                  />
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="phrase"
+                  control={control}
+                  rules={{ required: "Campo obligatorio" }}
+                  fullWidth
+                  multiline
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Frase o Idiomatica"
+                      fullWidth
+                      error={!!errors.phrase}
+                      helperText={errors.phrase?.message}
+                      multiline
+                      maxRows={4}
+                    />
+                  )}
+                />
+                {watch("phrase") && (
+                  <SpeakWord textToSpeak={watch("phrase")}></SpeakWord>
                 )}
-              />
+              </Stack>
 
               {watch("phrase") && (
                 <Button
                   variant="outlined"
                   onClick={handleAutoFill}
                   loading={loading}
-                  sx={{ alignSelf: "flex-start" }}
                 >
                   ✨ Autocompletar con IA
                 </Button>
@@ -213,19 +218,24 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               />
 
               {/* Contexto */}
-              <Controller
-                name="context"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Contexto/significado (opcional)"
-                    fullWidth
-                    multiline
-                    rows={3}
-                  />
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="context"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Contexto/significado (opcional)"
+                      fullWidth
+                      multiline
+                      rows={3}
+                    />
+                  )}
+                />
+                {watch("context") && (
+                  <SpeakWord textToSpeak={watch("context")}></SpeakWord>
                 )}
-              />
+              </Stack>
 
               {/* Ejemplos */}
               <Box>

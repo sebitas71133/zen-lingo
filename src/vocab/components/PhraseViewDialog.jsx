@@ -16,6 +16,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import DescriptionIcon from "@mui/icons-material/Description";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import LabelIcon from "@mui/icons-material/Label";
+import { SpeakWord } from "../../components/SpeakWord";
 
 const MotionBox = motion.create(Box);
 
@@ -44,6 +45,7 @@ export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
           <Box mb={3}>
             <Typography variant="h4" fontWeight="bold">
               {phrase}
+              <SpeakWord textToSpeak={phrase}></SpeakWord>
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1} mt={1}>
               <TranslateIcon fontSize="small" color="primary" />
@@ -74,6 +76,7 @@ export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
                 <Typography variant="subtitle2" fontWeight="bold">
                   Definición
                 </Typography>
+                <SpeakWord textToSpeak={context}></SpeakWord>
               </Stack>
               <Typography sx={{ ml: 4 }}>{context}</Typography>
             </Box>
@@ -95,7 +98,7 @@ export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
                     variant="body2"
                     sx={{ fontStyle: "italic" }}
                   >
-                    “{ex}”
+                    “{ex}”<SpeakWord textToSpeak={ex}></SpeakWord>
                   </Typography>
                 ))}
               </Stack>
