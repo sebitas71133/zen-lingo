@@ -25,24 +25,30 @@ import {
   Menu as MenuIcon,
   AccountCircle,
   LabelOutlined,
-  NotesOutlined,
   LogoutOutlined,
   BuildCircleOutlined,
 } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 export const SideBar = ({ drawerWidth = 240, displayName }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
   const navigate = useNavigate();
-  const theme = useTheme();
+  const dispatch = useDispatch();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const handleLogout = () => {
+    // limpia caché de RTK Query (notas, tags, etc.)
+    // dispatch(wordApi.util.resetApiState());
+    // dispatch(phrasesApi.util.resetApiState());
+    // dispatch(verbsApi.util.resetApiState());
+    // dispatch(textsApi.util.resetApiState());
+    // dispatch(tagsApi.util.resetApiState());
     navigate("/auth/logout", { replace: true });
   };
 

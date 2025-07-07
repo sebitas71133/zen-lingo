@@ -10,6 +10,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 import { Firestore } from "../firebase/config";
 
@@ -23,7 +24,9 @@ export const tagsApi = createApi({
         try {
           const { uid } = getState().auth;
           const ref = collection(Firestore, `users/${uid}/tags`);
-          const snapshot = await getDocs(ref);
+          const q = query(ref, orderBy("name")); // Ordena alfabéticamente (A-Z)
+          const snapshot = await getDocs(q);
+
           const tags = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),

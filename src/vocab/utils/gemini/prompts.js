@@ -6,8 +6,9 @@ export const getPromptByType = (type = "", translation, typeText = "") => {
       prompt = `Quiero que analices la palabra o frase "${translation}" y me devuelvas solo un objeto JSON que contenga los siguientes campos para llenar un formulario:
 
         {
-        "word": "traduccion al ingles(1 palabra)",
-        "type": "tipo de palabra en español (verbo, sustantivo, adjetivo, adverbio o expresiòn)",
+        "word": "traduccion al ingles",
+        "spokenForm": "forma hablada en inglés americano natural y su expliacion, usando connected speech o reducciones si aplica. Ejemplo: 'What did you do?' -> 'Whadja do?'",
+        "type": "tipo de palabra solo una de estas opciones en español (verbo, sustantivo, adjetivo, adverbio o expresiòn)",
         "definition": "una definición clara y breve en inglés y seguida entre parentesis su traduccion al español",
         "examples": ["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"] ejemplos no tan breves,
         

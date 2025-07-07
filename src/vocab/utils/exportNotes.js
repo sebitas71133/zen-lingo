@@ -2,12 +2,13 @@ import jsPDF from "jspdf";
 import * as XLSX from "xlsx";
 // import "jspdf-autotable";
 
-export const exportAllToJSON = ({ words, phrases, texts, verbs }) => {
+export const exportAllToJSON = ({ words, phrases, texts, verbs, tags }) => {
   const data = {
     palabras: words,
     frases: phrases,
     textos: texts,
     verbos: verbs,
+    etiquetas: tags,
   };
 
   const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -26,13 +27,14 @@ const formatTags = (tags) => tags.map((t) => t.name).join(", ");
 const formatExamples = (examples) =>
   Array.isArray(examples) ? examples.join(" | ") : "";
 
-export const exportAllToExcel = ({ words, phrases, texts, verbs }) => {
+export const exportAllToExcel = ({ words, phrases, texts, verbs, tags }) => {
   const wb = XLSX.utils.book_new();
 
   // 📘 Palabras
   const formattedWords = words.map((w) => ({
     Palabra: w.word,
     Traducción: w.translation,
+    Hablado: w.spokenForm,
     Definición: w.definition || "",
     Etiquetas: formatTags(w.tags || []),
     Ejemplos: formatExamples(w.examples || []),
@@ -97,14 +99,25 @@ export const exportAllToExcel = ({ words, phrases, texts, verbs }) => {
     FechaCreación: v.createdAt,
     FechaActualización: v.updatedAt,
   }));
+
   const sheetVerbs = XLSX.utils.json_to_sheet(formattedVerbs);
   XLSX.utils.book_append_sheet(wb, sheetVerbs, "Verbos");
+
+  // 📝 Tags
+  const formattedTags = phrases.map((p) => ({
+    Name: p.name,
+    Color: p.color,
+    FechaCreación: p.createdAt,
+    FechaActualización: p.updatedAt,
+  }));
+  const sheetTags = XLSX.utils.json_to_sheet(formattedTags);
+  XLSX.utils.book_append_sheet(wb, sheetTags, "Etiquetas");
 
   // 📥 Guardar archivo
   XLSX.writeFile(wb, "mi-data-translator.xlsx");
 };
 
-export const exportAllToPDF = ({ words, phrases, texts, verbs }) => {
+export const exportAllToPDF = ({ words, phrases, texts, verbs, tags }) => {
   const doc = new jsPDF();
   let y = 10;
 
@@ -134,6 +147,7 @@ export const exportAllToPDF = ({ words, phrases, texts, verbs }) => {
   addSection("📝 Frases", phrases, (p) => `${p.phrase} - ${p.translation}`);
   addSection("📄 Textos", texts, (t) => `${t.title} - ${t.translation}`);
   addSection("🔤 Verbos", verbs, (v) => `${v.verb} - ${v.translation}`);
+  addSection("🔤 Etiquetas", verbs, (v) => `${v.tags} - ${v.name}`);
 
   doc.save("mi-data-translator.pdf");
 };

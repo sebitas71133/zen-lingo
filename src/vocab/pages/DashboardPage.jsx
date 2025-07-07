@@ -18,6 +18,7 @@ import { useGetTextsQuery } from "../../services/textsApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { openDialog } from "../../store/slices/uiSlice";
+import { useGetTagsQuery } from "../../services/tagsApi";
 
 export const DashboardPage = () => {
   const {
@@ -41,10 +42,22 @@ export const DashboardPage = () => {
     isError: errorTexts,
   } = useGetTextsQuery();
 
+  const {
+    data: tags = [],
+    isLoading: loadingTags,
+    isError: errorTags,
+  } = useGetTagsQuery();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  if (loadingWords || loadingPhrases || loadingVerbs || loadingTexts) {
+  if (
+    loadingWords ||
+    loadingPhrases ||
+    loadingVerbs ||
+    loadingTexts ||
+    loadingTags
+  ) {
     return (
       <Stack alignItems="center" mt={4}>
         <CircularProgress />
@@ -53,7 +66,7 @@ export const DashboardPage = () => {
     );
   }
 
-  if (errorWords || errorPhrases || errorVerbs || errorTexts) {
+  if (errorWords || errorPhrases || errorVerbs || errorTexts || errorTags) {
     return (
       <Typography
         variant="h6"
@@ -76,12 +89,14 @@ export const DashboardPage = () => {
     { label: "Frases", value: phrases.length, emoji: "💬" },
     { label: "Palabras", value: words.length, emoji: "🧠" },
     { label: "Verbos", value: verbs.length, emoji: "⚙️" },
+    { label: "Tags", value: tags.length, emoji: "⚙️" },
   ];
 
   const latestTexts = getLastItems(texts);
   const latestWords = getLastItems(words);
   const latestPhrases = getLastItems(phrases);
   const latestVerbs = getLastItems(verbs);
+  const latestTags = getLastItems(tags);
 
   return (
     <Box sx={{ p: 4 }}>
@@ -130,7 +145,7 @@ export const DashboardPage = () => {
           </List>
         </Grid>
 
-        <Grid item xs={12} md={6} lg={3}>
+        <Grid item xs={12} md={6} lg={2}>
           <Typography variant="subtitle2">⚙️ Verbos</Typography>
           <List dense>
             {latestVerbs.map((v) => (
@@ -141,12 +156,23 @@ export const DashboardPage = () => {
           </List>
         </Grid>
 
-        <Grid item xs={12} md={6} lg={3}>
+        <Grid item xs={12} md={6} lg={2}>
           <Typography variant="subtitle2">📚 Textos</Typography>
           <List dense>
             {latestTexts.map((t) => (
               <ListItem key={t.id}>
                 <ListItemText primary={t.title} secondary={t.type} />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={2}>
+          <Typography variant="subtitle2">📚 Tags</Typography>
+          <List dense>
+            {latestTags.map((t) => (
+              <ListItem key={t.id}>
+                <ListItemText primary={t.name} secondary={t.color} />
               </ListItem>
             ))}
           </List>

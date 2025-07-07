@@ -40,14 +40,14 @@ export const TextCard = ({
   } = text;
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const handleOpen = (e) => {
-    e.stopPropagation();
-    setIsDialogOpen(true);
-  };
-  const handleClose = (e) => {
-    e.stopPropagation();
-    setIsDialogOpen(false);
-  };
+  // const handleOpen = (e) => {
+  //   e.stopPropagation();
+  //   setIsDialogOpen(true);
+  // };
+  // const handleClose = (e) => {
+  //   e.stopPropagation();
+  //   setIsDialogOpen(false);
+  // };
 
   const typeColor = textTypeColors[type] || "#64b5f6";
 
@@ -94,7 +94,7 @@ export const TextCard = ({
                 size="small"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleOpen();
+                  setIsDialogOpen(true);
                 }}
               >
                 <VisibilityIcon fontSize="small" />
@@ -198,7 +198,7 @@ export const TextCard = ({
 
       <TextViewDialog
         open={isDialogOpen}
-        onClose={handleClose}
+        onClose={() => setIsDialogOpen(false)}
         textData={text}
       />
     </Card>

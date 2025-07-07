@@ -25,33 +25,9 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 import { usePagination } from "../hooks/usePagination";
 import { useTagStore } from "../hooks/useTagStore";
-
-const tagColors = [
-  "#E57373", // Rojo suave
-  "#F06292", // Rosa
-  "#BA68C8", // Púrpura
-  "#9575CD", // Lavanda
-  "#64B5F6", // Azul claro
-  "#4FC3F7", // Celeste
-  "#4DD0E1", // Turquesa
-  "#4DB6AC", // Verde azulado
-  "#81C784", // Verde
-  "#AED581", // Verde lima
-  "#DCE775", // Lima claro
-  "#FFD54F", // Amarillo
-  "#FFB74D", // Naranja
-  "#FF8A65", // Naranja coral
-  "#A1887F", // Marrón suave
-  "#90A4AE", // Gris azulado
-  "#B0BEC5", // Gris claro
-  "#F48FB1", // Rosa claro
-  "#CE93D8", // Lila
-  "#FFF176", // Amarillo suave
-  "#A5D6A7", // Verde pastel
-  "#81D4FA", // Azul pastel
-  "#E1BEE7", // Lavanda claro
-  "#B39DDB", // Morado grisáceo
-];
+import { tagColors } from "../utils/tagColors";
+import { SeedWords } from "../../seed/SeedWords";
+import { SeedTags } from "../../seed/SeedTags";
 
 export const TagsPage = () => {
   const {
@@ -71,7 +47,14 @@ export const TagsPage = () => {
 
   const [order, setOrder] = useState("asc");
 
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    localStorage.getItem("tag_page") ?? 20
+  );
+
+  const setItemsPerPageStorage = (itemsPerPage) => {
+    localStorage.setItem(`tag_page`, itemsPerPage);
+    setItemsPerPage(itemsPerPage);
+  };
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -169,6 +152,7 @@ export const TagsPage = () => {
   return (
     <>
       <Container sx={{ mt: 5 }}>
+        {/* <SeedTags></SeedTags> */}
         {/* FILTERS */}
         <Collapse in={showFilters}>
           <Box sx={{ mb: 5 }}>
@@ -205,9 +189,11 @@ export const TagsPage = () => {
                     size="small"
                     fullWidth
                     value={itemsPerPage}
-                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                    onChange={(e) =>
+                      setItemsPerPageStorage(Number(e.target.value))
+                    }
                   >
-                    {[3, 6, 9, 12, 15].map((num) => (
+                    {[3, 6, 9, 12, 15, 25, 40, 50].map((num) => (
                       <MenuItem key={num} value={num}>
                         {num}
                       </MenuItem>
@@ -255,7 +241,7 @@ export const TagsPage = () => {
                       px: 2,
                       py: 0.8,
                       backgroundColor: color,
-                      color: "#fff",
+                      color: "#0F172A",
                       borderRadius: "20px",
                       "&:hover": {
                         opacity: 0.9,

@@ -14,7 +14,7 @@ import {
   CircularProgress,
   useTheme,
 } from "@mui/material";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+
 import { motion } from "framer-motion";
 import { Controller, useForm } from "react-hook-form";
 import { useTagStore } from "../hooks/useTagStore";
@@ -22,6 +22,7 @@ import { useWordStore } from "../hooks/useWordStore";
 import { translatorApi } from "../utils/gemini/translatorApi";
 
 import { SpeakWord } from "../../components/SpeakWord";
+import { cleanedText } from "../utils/cleanedText";
 
 // CONSTANTES
 const WORD_TYPES = ["sustantivo", "verbo", "adjetivo", "adverbio", "expresión"];
@@ -32,6 +33,7 @@ const DEFAULT_VALUES = {
   definition: "",
   examples: [],
   tags: [],
+  spokenForm: "", //Forma hablada
 };
 
 // Componente animado
@@ -113,8 +115,11 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
       // Llamada a API Gemini
       const result = await translatorApi(translation, "word");
 
+      console.log({ result });
+
       if (result) {
         if (result.word) setValue("word", result.word);
+        if (result.spokenForm) setValue("spokenForm", result.spokenForm);
         if (result.type) setValue("type", result.type);
         if (result.definition) setValue("definition", result.definition);
         if (result.examples && Array.isArray(result.examples)) {
@@ -157,7 +162,10 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
               <Controller
                 name="translation"
                 control={control}
-                rules={{ required: "Campo obligatorio" }}
+                rules={{
+                  required: "Campo obligatorio",
+                  maxLength: { value: 80, message: "Máximo 80 caracteres" },
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -188,7 +196,10 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                 <Controller
                   name="word"
                   control={control}
-                  rules={{ required: "Campo obligatorio" }}
+                  rules={{
+                    required: "Campo obligatorio",
+                    maxLength: { value: 80, message: "Máximo 80 caracteres" },
+                  }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -204,6 +215,35 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
 
                 {watch("word") && (
                   <SpeakWord textToSpeak={watch("word")}></SpeakWord>
+                )}
+              </Stack>
+
+              {/* Forma Hablada */}
+
+              <Stack direction={"row"} spacing={1} mt={1} alignItems={"center"}>
+                <Controller
+                  name="spokenForm"
+                  control={control}
+                  rules={{
+                    maxLength: { value: 200, message: "Máximo 200 caracteres" },
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Forma Hablada (Opcional)"
+                      fullWidth
+                      error={!!errors.spokenForm}
+                      helperText={errors.spokenForm?.message}
+                      multiline
+                      maxRows={4}
+                    />
+                  )}
+                />
+
+                {watch("spokenForm") && (
+                  <SpeakWord
+                    textToSpeak={cleanedText(watch("spokenForm"))}
+                  ></SpeakWord>
                 )}
               </Stack>
 
@@ -236,6 +276,9 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                 <Controller
                   name="definition"
                   control={control}
+                  rules={{
+                    maxLength: { value: 300, message: "Máximo 300 caracteres" },
+                  }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -269,6 +312,11 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                     fullWidth
                     multiline
                     maxRows={4}
+                    slotProps={{
+                      input: {
+                        maxLength: 150,
+                      },
+                    }}
                   />
                   <Button
                     variant="outlined"
@@ -314,25 +362,15 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                         {...params}
                         label="Etiquetas"
                         placeholder="Selecciona..."
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Etiquetas"
-                            placeholder="Selecciona..."
-                            slotProps={{
-                              input: {
-                                endAdornment: (
-                                  <>
-                                    {loadingTags && (
-                                      <CircularProgress size={20} />
-                                    )}
-                                    {params.InputProps?.endAdornment}
-                                  </>
-                                ),
-                              },
-                            }}
-                          />
-                        )}
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {loadingTags && <CircularProgress size={20} />}
+                              {params.InputProps?.endAdornment}
+                            </>
+                          ),
+                        }}
                       />
                     )}
                   />

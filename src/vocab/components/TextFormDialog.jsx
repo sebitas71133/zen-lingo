@@ -274,25 +274,15 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
                         {...params}
                         label="Etiquetas"
                         placeholder="Selecciona..."
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Etiquetas"
-                            placeholder="Selecciona..."
-                            slotProps={{
-                              input: {
-                                endAdornment: (
-                                  <>
-                                    {loadingTags && (
-                                      <CircularProgress size={20} />
-                                    )}
-                                    {params.InputProps?.endAdornment}
-                                  </>
-                                ),
-                              },
-                            }}
-                          />
-                        )}
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {loadingTags && <CircularProgress size={20} />}
+                              {params.InputProps?.endAdornment}
+                            </>
+                          ),
+                        }}
                       />
                     )}
                   />

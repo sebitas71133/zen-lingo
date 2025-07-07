@@ -5,6 +5,11 @@ import { useDispatch } from "react-redux";
 
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../hooks/useAuthStore";
+import { wordApi } from "../../services/wordApi";
+import { phrasesApi } from "../../services/phrasesApi";
+import { verbsApi } from "../../services/verbsApi";
+import { textsApi } from "../../services/textsApi";
+import { tagsApi } from "../../services/tagsApi";
 
 export const LogoutSuccess = () => {
   const navigate = useNavigate();
@@ -21,6 +26,11 @@ export const LogoutSuccess = () => {
     const timeout = setTimeout(() => {
       navigate("/");
       logoutTotal();
+      dispatch(wordApi.util.resetApiState());
+      dispatch(phrasesApi.util.resetApiState());
+      dispatch(verbsApi.util.resetApiState());
+      dispatch(textsApi.util.resetApiState());
+      dispatch(tagsApi.util.resetApiState());
       //dispatch(apiSlice.util.resetApiState());
     }, 2000);
 
