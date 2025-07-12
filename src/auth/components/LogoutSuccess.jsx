@@ -43,13 +43,20 @@ export const LogoutSuccess = () => {
   return (
     <Container maxWidth="sm" sx={{ mt: 10, textAlign: "center" }}>
       <LogoutIcon sx={{ fontSize: 80, color: "primary.main", mb: 2 }} />
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: "primary.main" }}>
         Sesión cerrada
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        sx={{ mb: 4, color: "primary.main" }}
+      >
         Has cerrado sesión exitosamente.
       </Typography>
-      <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 24 }}>
+      <Typography
+        variant="body1"
+        sx={{ fontWeight: "bold", fontSize: 24, color: "primary.main" }}
+      >
         Redirigiendo en {countdown}...
       </Typography>
     </Container>

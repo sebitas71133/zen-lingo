@@ -59,7 +59,7 @@ export const NavbarUser = ({ drawerWidth = 240 }) => {
             whiteSpace: "nowrap",
           }}
         >
-          📘 EnglishNote
+          📘 ZenLingo
         </Typography>
 
         {/* Botón de modo oscuro alineado a la derecha */}

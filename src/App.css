@@ -14,7 +14,15 @@ main {
 #root {
   margin: 0 auto;
 }
+
+.slick-slide > div {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
 /* 
+
 
 
 

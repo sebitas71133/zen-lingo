@@ -21,7 +21,6 @@ import {
   signInWithEmailPassword,
   registerWithEmailPassword,
 } from "../../firebase/providers";
-import { setIsUpdatingRole, setUsers } from "../../store/slices/userSlice";
 
 export const useAuthStore = () => {
   const { status, email, displayName, photoUrl, errorMessage } = useSelector(
@@ -66,17 +65,17 @@ export const useAuthStore = () => {
     dispatch(setIsloading(false));
   };
 
-  const getRegisteredUsers = async () => {
-    const collectionRef = collection(Firestore, "users");
-    const docs = await getDocs(collectionRef);
-    const users = [];
+  // const getRegisteredUsers = async () => {
+  //   const collectionRef = collection(Firestore, "users");
+  //   const docs = await getDocs(collectionRef);
+  //   const users = [];
 
-    docs.forEach((doc) => {
-      users.push({ id: doc.id, ...doc.data() });
-    });
+  //   docs.forEach((doc) => {
+  //     users.push({ id: doc.id, ...doc.data() });
+  //   });
 
-    dispatch(setUsers(users));
-  };
+  //   dispatch(setUsers(users));
+  // };
 
   const saveUserToFirestore = async (user) => {
     if (!user) return;
@@ -103,16 +102,16 @@ export const useAuthStore = () => {
     );
   };
 
-  const updateUserRole = async (uid, newRole) => {
-    if (!uid || !newRole) return;
+  // const updateUserRole = async (uid, newRole) => {
+  //   if (!uid || !newRole) return;
 
-    dispatch(setIsUpdatingRole(true));
-    const userRef = doc(Firestore, "users", uid);
+  //   dispatch(setIsUpdatingRole(true));
+  //   const userRef = doc(Firestore, "users", uid);
 
-    await setDoc(userRef, { role: newRole }, { merge: true });
+  //   await setDoc(userRef, { role: newRole }, { merge: true });
 
-    dispatch(setIsUpdatingRole(false));
-  };
+  //   dispatch(setIsUpdatingRole(false));
+  // };
 
   const logoutTotal = async () => {
     await logoutFirebase();
@@ -138,11 +137,11 @@ export const useAuthStore = () => {
 
   return {
     user,
-    getRegisteredUsers,
+    // getRegisteredUsers,
     signInWithEmailPassowrdThunk,
     createUserWithEmailPasswordThunk,
     logoutTotal,
     checkingAuthenticaction,
-    updateUserRole,
+    //updateUserRole,
   };
 };

@@ -6,7 +6,8 @@ import ErrorBoundary from "../home/components/ErrorBoundary";
 import NotFoundPage from "../home/components/NotFoundPage";
 import { createBrowserRouter } from "react-router-dom";
 import authRoutes from "../auth/routes/AuthRoutes";
-import vocabRoutes from "../vocab/routes/vocabRoutes";
+import vocabRoutes from "../app/routes/vocabRoutes";
+
 // import appRoutes from "../app/routes/appRoutes";
 
 const routes = [

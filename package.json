@@ -1,5 +1,5 @@
 {
-  "name": "translate-app-zen",
+  "name": "zen-lingo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -27,7 +27,9 @@
     "react-hook-form": "^7.54.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
+    "react-slick": "^0.30.3",
     "react-toastify": "^11.0.5",
+    "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.22.1",
     "xlsx": "^0.18.5"
   },

@@ -1,5 +1,5 @@
 import React from "react";
-import { handleSpeak } from "../vocab/utils/gemini/handleSpeak";
+import { handleSpeak } from "../app/utils/gemini/handleSpeak";
 import { IconButton } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 

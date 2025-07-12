@@ -2,25 +2,31 @@ import React, { useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CheckingAuth } from "./components/CheckingAuth";
 
 export const AuthHandler = () => {
   const { status } = useSelector((state) => state.auth);
-  const { userRole } = useSelector((state) => state.user);
+  // const { userRole } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (status === "authenticated") {
-      if (userRole === "admin") {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/app", { replace: true });
-      }
-    } else if (status === "not-authenticated") {
-      navigate("/", { replace: true });
+      navigate("/app", { replace: true });
+      // if (userRole === "admin") {
+      //   navigate("/admin", { replace: true });
+      // } else {
+      //   navigate("/app", { replace: true });
+      // }
+    } else if (
+      status === "not-authenticated" &&
+      location.pathname !== "/" &&
+      !location.pathname.startsWith("/auth")
+    ) {
+      navigate("/auth", { replace: true });
     }
-  }, [navigate, status, userRole]);
+  }, [navigate, status]);
 
   if (status === "checking") {
     return <CheckingAuth />;

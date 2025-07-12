@@ -1,16 +1,15 @@
 //Main routes
 
-import { AnswersPage } from "../pages/AnswersPage";
-import { TranslatorPage } from "../pages/TranslatorPage";
 import { PublicLayout } from "../layout/PublicLayout";
+import HomePage from "../pages/HomePage";
 
 const homeRoutes = {
   path: "/",
 
   element: <PublicLayout />,
   children: [
-    { index: true, element: <TranslatorPage /> },
-    { path: "answer", element: <AnswersPage /> },
+    { index: true, element: <HomePage /> },
+    // { path: "answer", element: <AnswersPage /> },
   ],
 };
 

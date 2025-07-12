@@ -43,12 +43,6 @@ export const SideBar = ({ drawerWidth = 240, displayName }) => {
   };
 
   const handleLogout = () => {
-    // limpia caché de RTK Query (notas, tags, etc.)
-    // dispatch(wordApi.util.resetApiState());
-    // dispatch(phrasesApi.util.resetApiState());
-    // dispatch(verbsApi.util.resetApiState());
-    // dispatch(textsApi.util.resetApiState());
-    // dispatch(tagsApi.util.resetApiState());
     navigate("/auth/logout", { replace: true });
   };
 
