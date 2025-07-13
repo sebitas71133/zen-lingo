@@ -2,32 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Swal from "sweetalert2";
-import {
-  Autocomplete,
-  Box,
-  Chip,
-  Collapse,
-  Container,
-  Grid,
-  MenuItem,
-  Pagination,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
-import { VerbCard } from "./VerbCard";
-import { VerbFormDialog } from "./VerbFormDialog";
-import { usePagination } from "../../hooks/usePagination";
-import { useVerbStore } from "../../hooks/useVerbStore";
-import { useTagStore } from "../../hooks/useTagStore";
-import { useFiltered } from "../../hooks/useFiltered";
+import { Box, Grid, Pagination, Stack } from "@mui/material";
+
+import { VerbCard, VerbFormDialog } from "../../components";
 import { closeDialog, openDialog } from "../../../store/slices/uiSlice";
+
+import { useFiltered, usePagination, useVerbStore } from "../../hooks";
+import { SearchAndFilters } from "../common";
+import { verbTypeColors } from "../../utils";
 
 export const VerbList = ({ verbs, showFilters }) => {
   const dispatch = useDispatch();
-
-  // Obtener tags
-  const { tags = [], isLoading } = useTagStore();
 
   // Uso del hook personalizado con filtros y data filtrada
   const {
@@ -111,99 +96,24 @@ export const VerbList = ({ verbs, showFilters }) => {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Box sx={{ mb: 5 }}>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Buscar verbo"
-            size="small"
-            fullWidth
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </Grid>
-      </Box>
-      <Collapse in={showFilters}>
-        <Box sx={{ mb: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={6} sm={4} md={2}>
-              <TextField
-                label="Dirección"
-                select
-                size="small"
-                fullWidth
-                value={order}
-                onChange={(e) => setOrder(e.target.value)}
-              >
-                <MenuItem value="asc">Ascendente</MenuItem>
-                <MenuItem value="desc">Descendente</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid item xs={6} sm={4} md={2}>
-              <Tooltip title="Cantidad de verbos por página">
-                <TextField
-                  label="Por página"
-                  select
-                  size="small"
-                  fullWidth
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                >
-                  {[3, 6, 9, 12, 15].map((num) => (
-                    <MenuItem key={num} value={num}>
-                      {num}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-              <TextField
-                label="Tipo"
-                select
-                size="small"
-                fullWidth
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <MenuItem value="">Todos</MenuItem>
-                <MenuItem value="regular">Regular</MenuItem>
-                <MenuItem value="irregular">Irregular</MenuItem>
-              </TextField>
-            </Grid>
+      <SearchAndFilters
+        showFilters={showFilters}
+        setSearch={setSearch}
+        search={search}
+        // setSortBy={setSortBy}
+        // sortBy={sortBy}
+        setOrder={setOrder}
+        order={order}
+        setItemsPerPage={setItemsPerPage}
+        itemsPerPage={itemsPerPage}
+        setType={setType}
+        type={type}
+        setSelectedTags={setSelectedTags}
+        selectedTags={selectedTags}
+        typeColors={verbTypeColors}
+      ></SearchAndFilters>
 
-            {/* Fila 2: Etiquetas */}
-            <Grid item xs={12} md={2}>
-              <Autocomplete
-                multiple
-                options={tags}
-                getOptionLabel={(option) => option.name}
-                value={selectedTags}
-                onChange={(event, newValue) => setSelectedTags(newValue)}
-                loading={isLoading}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      variant="outlined"
-                      label={option.name}
-                      {...getTagProps({ index })}
-                      key={option.id}
-                    />
-                  ))
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Etiquetas"
-                    size="small"
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
-        </Box>
-      </Collapse>
-
+      {/* VERB LIST */}
       <Box>
         <Grid container spacing={2}>
           {currentVerbs.map((verb) => (
@@ -233,7 +143,7 @@ export const VerbList = ({ verbs, showFilters }) => {
 
         <VerbFormDialog
           open={openForm}
-          onClose={() => dispatch(closeDialogalog("verbEditForm"))}
+          onClose={() => dispatch(closeDialog("verbEditForm"))}
           initialData={verbToEdit}
         />
       </Box>

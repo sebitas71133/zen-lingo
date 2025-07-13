@@ -11,14 +11,19 @@ import {
   ListItemText,
   CircularProgress,
 } from "@mui/material";
-import { useGetWordsQuery } from "../../services/wordApi";
-import { useGetPhrasesQuery } from "../../services/phrasesApi";
-import { useGetVerbsQuery } from "../../services/verbsApi";
-import { useGetTextsQuery } from "../../services/textsApi";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
+import {
+  useGetWordsQuery,
+  useGetPhrasesQuery,
+  useGetVerbsQuery,
+  useGetTextsQuery,
+  useGetTagsQuery,
+} from "../../services";
+
 import { openDialog } from "../../store/slices/uiSlice";
-import { useGetTagsQuery } from "../../services/tagsApi";
 
 export const DashboardPage = () => {
   const {

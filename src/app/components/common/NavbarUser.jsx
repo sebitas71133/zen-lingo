@@ -9,8 +9,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDarkMode } from "../../store/slices/themeSlice";
-import { DarkMode } from "../../components/DarkMode";
+import { toggleDarkMode } from "../../../store/slices/themeSlice";
+import { DarkMode } from "../../../components/DarkMode";
 
 export const NavbarUser = ({ drawerWidth = 240 }) => {
   const { darkMode } = useSelector((state) => state.theme);

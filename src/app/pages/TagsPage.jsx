@@ -23,11 +23,12 @@ import Swal from "sweetalert2";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-import { usePagination } from "../hooks/usePagination";
-import { useTagStore } from "../hooks/useTagStore";
-import { tagColors } from "../utils/tagColors";
-import { SeedWords } from "../../seed/SeedWords";
-import { SeedTags } from "../../seed/SeedTags";
+import { usePagination, useTagStore } from "../hooks";
+
+import { tagColors } from "../utils";
+
+// import { SeedWords } from "../../seed/SeedWords";
+// import { SeedTags } from "../../seed/SeedTags";
 
 export const TagsPage = () => {
   const {

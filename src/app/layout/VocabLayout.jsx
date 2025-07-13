@@ -2,8 +2,8 @@ import { Outlet } from "react-router-dom";
 
 import { Box, Toolbar } from "@mui/material";
 import { useAuthStore } from "../../auth/hooks/useAuthStore";
-import { SideBar } from "../components/SideBar";
-import { NavbarUser } from "../components/NavbarUser";
+
+import { NavbarUser, SideBar } from "../components";
 import { ToastContainer } from "react-toastify";
 
 const drawerWidth = 280;

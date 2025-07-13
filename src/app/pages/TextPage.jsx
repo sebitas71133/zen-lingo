@@ -5,17 +5,16 @@ import {
   CircularProgress,
   Fab,
 } from "@mui/material";
-
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useTextStore } from "../hooks/useTextStore";
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
-import { TextList } from "../components/text/TextList";
-import { TextFormDialog } from "../components/text/TextFormDialog";
+
+import { useTextStore } from "../hooks";
+import { TextList, TextFormDialog } from "../components";
 
 export const TextPage = () => {
   const dispatch = useDispatch();

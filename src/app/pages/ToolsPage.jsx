@@ -11,20 +11,26 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import FolderZipIcon from "@mui/icons-material/FolderZip";
 import CodeIcon from "@mui/icons-material/Code";
-import { useAddWordMutation, useGetWordsQuery } from "../../services/wordApi";
+
 import {
+  useAddTextMutation,
+  useGetTextsQuery,
+  useAddWordMutation,
+  useGetWordsQuery,
+  useAddVerbMutation,
+  useGetVerbsQuery,
   useAddPhraseMutation,
   useGetPhrasesQuery,
-} from "../../services/phrasesApi";
-import { useAddVerbMutation, useGetVerbsQuery } from "../../services/verbsApi";
-import { useAddTextMutation, useGetTextsQuery } from "../../services/textsApi";
+  useAddTagMutation,
+  useGetTagsQuery,
+} from "../../services";
 
 import {
   exportAllToExcel,
   exportAllToJSON,
   exportAllToPDF,
 } from "../utils/exportNotes";
-import { useAddTagMutation, useGetTagsQuery } from "../../services/tagsApi";
+
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 

@@ -4,7 +4,7 @@ import {
   useDeleteVerbMutation,
   useGetVerbsQuery,
   useUpdateVerbMutation,
-} from "../../services/verbsApi";
+} from "../../services";
 
 export const useVerbStore = () => {
   const { data: verbs = [], isLoading, isError, refetch } = useGetVerbsQuery();

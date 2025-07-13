@@ -3,7 +3,7 @@ import {
   useDeleteWordMutation,
   useGetWordsQuery,
   useUpdateWordMutation,
-} from "../../services/wordApi";
+} from "../../services";
 
 export const useWordStore = () => {
   const { data: words = [], isLoading, isError, refetch } = useGetWordsQuery();

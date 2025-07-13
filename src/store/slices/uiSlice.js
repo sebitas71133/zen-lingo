@@ -4,17 +4,15 @@ const initialState = {
   dialogs: {
     wordForm: false,
     wordEditForm: false,
-    wordShowForm: false,
-    phraseForm: false,
 
+    phraseForm: false,
     phraseEditForm: false,
+
     verbForm: false,
     verbEditForm: false,
-    verbShowForm: false,
 
     textForm: false,
     textEditForm: false,
-    textShowForm: false,
 
     deleteConfirm: false,
     // puedes agregar más si es necesario

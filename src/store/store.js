@@ -3,7 +3,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { themeReducer } from "./slices/themeSlice";
 import { authReducer } from "./slices/authSlice";
 
-import { tagReducer } from "./slices/tagSlice";
 import { wordApi } from "../services/wordApi";
 import { tagsApi } from "../services/tagsApi";
 import { wordFilterReducer } from "./slices/wordFilterSlice";
@@ -16,7 +15,6 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     theme: themeReducer,
-    tags: tagReducer,
     wordFilter: wordFilterReducer,
     ui: uiReducer,
     [wordApi.reducerPath]: wordApi.reducer,

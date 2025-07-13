@@ -3,7 +3,7 @@ import {
   useAddTextMutation,
   useUpdateTextMutation,
   useDeleteTextMutation,
-} from "../../services/textsApi";
+} from "../../services";
 
 export const useTextStore = () => {
   const { data: texts = [], isLoading, isError, refetch } = useGetTextsQuery();

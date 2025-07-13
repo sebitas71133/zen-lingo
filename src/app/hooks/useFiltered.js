@@ -8,7 +8,7 @@ export const useFiltered = (
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [order, setOrder] = useState("asc");
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("alphabetical");
 
   const [itemsPerPage, setItemsPerPageS] = useState(defaultItemsPerPage);
   const [selectedTags, setSelectedTags] = useState([]);

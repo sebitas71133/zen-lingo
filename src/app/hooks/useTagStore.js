@@ -3,7 +3,7 @@ import {
   useDeleteTagMutation,
   useGetTagsQuery,
   useUpdateTagMutation,
-} from "../../services/tagsApi";
+} from "../../services";
 
 export const useTagStore = () => {
   const { data: tags = [], isLoading, isError, refetch } = useGetTagsQuery();

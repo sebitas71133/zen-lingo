@@ -8,22 +8,21 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from "@mui/icons-material/FilterList";
-
-import { useGetWordsQuery } from "../../services/wordApi";
-
 import { useDispatch, useSelector } from "react-redux";
+
+import { useGetWordsQuery } from "../../services";
+
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 import { SeedWords } from "../../seed/SeedWords";
 
-import { WordList } from "../components/word/WordList";
-import { WordFormDialog } from "../components/word/WordFormDialog";
+import { WordFormDialog, WordList } from "../components";
 
 export const WordPage = () => {
+  const { data: words = [], isLoading, isError } = useGetWordsQuery();
+
   const [showFilters, setShowFilters] = useState(false);
   const dispatch = useDispatch();
   const { wordForm: openForm } = useSelector((state) => state.ui.dialogs);
-
-  const { data: words = [], isLoading, isError } = useGetWordsQuery();
 
   if (isLoading) {
     return (

@@ -19,7 +19,7 @@ import { textTypeColors } from "../../utils/wordTypes";
 
 import { TextViewDialog } from "./TextViewDialog";
 import { formattedDate } from "../../utils/formatedDate";
-import { WordCardActions } from "../WordCardActions";
+import { WordCardActions } from "../common/WordCardActions";
 
 export const TextCard = ({
   text,

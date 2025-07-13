@@ -5,17 +5,16 @@ import {
   CircularProgress,
   Fab,
 } from "@mui/material";
-
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-import { useVerbStore } from "../hooks/useVerbStore.js";
-import { useDispatch, useSelector } from "react-redux";
-import { closeDialog, openDialog } from "../../store/slices/uiSlice.js";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { VerbFormDialog } from "../components/verb/VerbFormDialog.jsx";
-import { VerbList } from "../components/verb/VerbList.jsx";
+import { closeDialog, openDialog } from "../../store/slices/uiSlice.js";
+
+import { useVerbStore } from "../hooks";
+import { VerbFormDialog, VerbList } from "../components";
 
 export const VerbPage = () => {
   const { verbs = [], isLoading, isError } = useVerbStore();
@@ -33,8 +32,6 @@ export const VerbPage = () => {
       </Stack>
     );
   }
-
-  console.log({ verbs });
 
   if (isError) {
     return (

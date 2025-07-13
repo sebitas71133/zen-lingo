@@ -16,7 +16,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import StarIcon from "@mui/icons-material/Star";
 import { phraseTypeColors } from "../../utils/wordTypes";
 import { formattedDate } from "../../utils/formatedDate";
-import { WordCardActions } from "../WordCardActions";
+import { WordCardActions } from "../common/WordCardActions";
 import { PhraseViewDialog } from "./PhraseViewDialog";
 
 export const PhraseCard = ({

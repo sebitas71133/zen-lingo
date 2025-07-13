@@ -4,7 +4,7 @@ import {
   useDeletePhraseMutation,
   useGetPhrasesQuery,
   useUpdatePhraseMutation,
-} from "../../services/phrasesApi";
+} from "../../services";
 
 export const usePhraseStore = () => {
   const {

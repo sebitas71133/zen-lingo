@@ -18,7 +18,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { WordViewDialog } from "./WordViewDialog";
 import { wordTypeColors } from "../../utils/wordTypes";
 import { formattedDate } from "../../utils/formatedDate";
-import { WordCardActions } from "../WordCardActions";
+import { WordCardActions } from "../common/WordCardActions";
 
 export const WordCard = ({
   word,

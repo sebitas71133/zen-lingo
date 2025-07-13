@@ -9,13 +9,13 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-import { usePhraseStore } from "../hooks/usePhraseStore";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PhraseList } from "../components/phrase/PhraseList";
+
 import { closeDialog, openDialog } from "../../store/slices/uiSlice";
 
-import { useState } from "react";
-import { PhraseFormDialog } from "../components/phrase/PhraseFormDialog";
+import { usePhraseStore } from "../hooks";
+import { PhraseList, PhraseFormDialog } from "../components";
 
 export const PhrasePage = () => {
   const { phrases = [], isLoading, isError } = usePhraseStore();
