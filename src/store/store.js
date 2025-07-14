@@ -5,7 +5,7 @@ import { authReducer } from "./slices/authSlice";
 
 import { wordApi } from "../services/wordApi";
 import { tagsApi } from "../services/tagsApi";
-import { wordFilterReducer } from "./slices/wordFilterSlice";
+
 import { uiReducer } from "./slices/uiSlice";
 import { phrasesApi } from "../services/phrasesApi";
 import { verbsApi } from "../services/verbsApi";
@@ -15,7 +15,6 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     theme: themeReducer,
-    wordFilter: wordFilterReducer,
     ui: uiReducer,
     [wordApi.reducerPath]: wordApi.reducer,
     [tagsApi.reducerPath]: tagsApi.reducer,

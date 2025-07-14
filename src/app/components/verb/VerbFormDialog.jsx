@@ -127,7 +127,7 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
     try {
       // Llamada a API Gemini (o tu función generadora)
       const result = await translatorApi(translation, "verb");
-      console.log({ result });
+
       if (result) {
         // Campos simples
         if (result.verb) setValue("verb", result.verb);
@@ -160,7 +160,7 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
               result?.tenses?.pastParticiple.toLowerCase().trim(),
               result?.tenses?.present.toLowerCase().trim()
             );
-            console.log(isRegular);
+
             setValue("type", isRegular ? "regular" : "irregular");
           } else if (result.type) {
             // Fallback si no puedes validar
@@ -489,6 +489,6 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
 
 const isRegularVerb = (past, pastParticiple, base) => {
   const edForm = base + "ed";
-  console.log({ edForm, past, pastParticiple });
+
   return past === edForm && pastParticiple === edForm;
 };

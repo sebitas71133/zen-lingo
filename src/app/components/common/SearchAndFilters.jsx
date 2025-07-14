@@ -29,8 +29,6 @@ export const SearchAndFilters = ({
 }) => {
   const { tags = [], isLoading } = useTagStore();
 
-  console.log({ wordTypeColors });
-
   return (
     <>
       <Box sx={{ mb: 5 }}>

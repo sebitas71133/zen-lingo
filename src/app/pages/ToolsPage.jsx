@@ -23,6 +23,11 @@ import {
   useGetPhrasesQuery,
   useAddTagMutation,
   useGetTagsQuery,
+  useDeleteWordMutation,
+  useDeletePhraseMutation,
+  useDeleteVerbMutation,
+  useDeleteTextMutation,
+  useDeleteTagMutation,
 } from "../../services";
 
 import {
@@ -62,6 +67,18 @@ export const ToolsPage = () => {
     isError: errorTags,
   } = useGetTagsQuery();
 
+  const [addWord] = useAddWordMutation();
+  const [addPhrase] = useAddPhraseMutation();
+  const [addVerb] = useAddVerbMutation();
+  const [addText] = useAddTextMutation();
+  const [addTag] = useAddTagMutation();
+
+  const [deleteWord] = useDeleteWordMutation();
+  const [deletePhrase] = useDeletePhraseMutation();
+  const [deleteVerb] = useDeleteVerbMutation();
+  const [deleteText] = useDeleteTextMutation();
+  const [deleteTag] = useDeleteTagMutation();
+
   if (
     loadingWords ||
     loadingPhrases ||
@@ -89,8 +106,6 @@ export const ToolsPage = () => {
     );
   }
 
-  console.log({ words, phrases, verbs, texts });
-
   const handleExport = (type) => {
     switch (type) {
       case "json":
@@ -108,12 +123,6 @@ export const ToolsPage = () => {
     }
   };
 
-  const [addWord] = useAddWordMutation();
-  const [addPhrase] = useAddPhraseMutation();
-  const [addVerb] = useAddVerbMutation();
-  const [addText] = useAddTextMutation();
-  const [addTag] = useAddTagMutation();
-
   const handleImportJson = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -130,7 +139,7 @@ export const ToolsPage = () => {
         etiquetas = [],
       } = json;
 
-      console.log({ palabras, frases, verbos, textos, etiquetas });
+      console.log({ verbos });
 
       //Procesar cada colección
 
@@ -213,23 +222,31 @@ export const ToolsPage = () => {
 
   const handleResetAll = async () => {
     const result = await Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Esto eliminará todas las colecciones. Esta acción no se puede deshacer.",
+      title: "¿Estás absolutamente seguro?",
+      html: `Esta acción <b>no se puede deshacer</b>. Escribe <code>BORRAR TODO</code> para confirmar.`,
+      input: "text",
+      inputPlaceholder: "Escribe BORRAR TODO",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, borrar todo",
+      confirmButtonText: "Sí, eliminar todo",
       cancelButtonText: "Cancelar",
+      preConfirm: (value) => {
+        if (value !== "BORRAR TODO") {
+          Swal.showValidationMessage("Debes escribir exactamente: BORRAR TODO");
+          return false;
+        }
+      },
     });
 
     if (result.isConfirmed) {
       try {
-        // await deleteAllWords();
-        // await deleteAllPhrases();
-        // await deleteAllVerbs();
-        // await deleteAllTexts();
-        // await deleteAllTags();
+        await Promise.all(words.map((word) => deleteWord(word.id)));
+        await Promise.all(phrases.map((phrase) => deletePhrase(phrase.id)));
+        await Promise.all(texts.map((text) => deleteText(text.id)));
+        await Promise.all(verbs.map((verb) => deleteVerb(verb.id)));
+        await Promise.all(tags.map((tag) => deleteTag(tag.id)));
 
         toast.success("Colecciones reseteadas correctamente ✅");
 

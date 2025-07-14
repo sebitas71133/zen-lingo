@@ -108,8 +108,6 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
       // Llamada a Gemini con el nuevo prompt
       const result = await translatorApi(title, "text", type);
 
-      console.log({ result });
-
       if (result) {
         if (result.originalText) setValue("originalText", result.originalText);
         if (result.translation) setValue("translation", result.translation);

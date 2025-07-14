@@ -7,7 +7,7 @@ import { CheckingAuth } from "./components/CheckingAuth";
 
 export const AuthHandler = () => {
   const { status } = useSelector((state) => state.auth);
-  // const { userRole } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
   const location = useLocation();
 

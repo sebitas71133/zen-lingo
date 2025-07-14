@@ -114,8 +114,6 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
       // Llamada a API Gemini
       const result = await translatorApi(translation, "word");
 
-      console.log({ result });
-
       if (result) {
         if (result.word) setValue("word", result.word);
         if (result.spokenForm) setValue("spokenForm", result.spokenForm);

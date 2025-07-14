@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { FirebaseAuth } from "../firebase/config";
-import { CheckingAuth } from "./components/CheckingAuth";
+import { CheckingAuth } from "../auth/components/CheckingAuth";
 import { checkingCredentials, login, logout } from "../store/slices/authSlice";
 
 export const AuthProvider = ({ children }) => {

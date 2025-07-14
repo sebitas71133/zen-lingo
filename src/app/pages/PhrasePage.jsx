@@ -20,8 +20,6 @@ import { PhraseList, PhraseFormDialog } from "../components";
 export const PhrasePage = () => {
   const { phrases = [], isLoading, isError } = usePhraseStore();
 
-  console.log({ phrases });
-
   const dispatch = useDispatch();
   const { phraseForm: openForm } = useSelector((state) => state.ui.dialogs);
 

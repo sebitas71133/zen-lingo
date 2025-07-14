@@ -27,6 +27,7 @@ const DEFAULT_VALUES = {
   type: "",
   context: "",
   examples: [],
+  tags: [],
 };
 
 const MotionBox = motion.create(Box);
@@ -108,7 +109,7 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
     try {
       // Llamada a API Gemini con tipo "phrase"
       const result = await translatorApi(translation, "phrase");
-      console.log({ result });
+
       if (result) {
         // if (result.phrase) setValue("phrase", result.phrase);
         if (result.type)

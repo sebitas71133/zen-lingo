@@ -29,8 +29,6 @@ export const VerbViewDialog = ({ open, onClose, verbData }) => {
     verb,
   } = verbData || {};
 
-  console.log({ verbData });
-
   const { base, thirdPerson, past, pastParticiple, presentParticiple, future } =
     conjugations;
 

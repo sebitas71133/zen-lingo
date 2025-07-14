@@ -6,8 +6,6 @@ export const handleSpeak = (
 ) => {
   if (!text) return;
 
-  console.log({ text });
-
   if (window.speechSynthesis.speaking) {
     toast.warning("Espera un momento... el audio aún se está reproduciendo.", {
       position: "top-right",

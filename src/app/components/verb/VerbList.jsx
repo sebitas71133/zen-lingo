@@ -32,6 +32,8 @@ export const VerbList = ({ verbs, showFilters }) => {
 
   //Paginacion y data para mostrar
 
+  console.log({ verbs });
+
   const {
     currentPageData: currentVerbs,
     page,

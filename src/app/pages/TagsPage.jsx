@@ -39,8 +39,6 @@ export const TagsPage = () => {
     deleteTagById,
   } = useTagStore();
 
-  console.log({ tagsData });
-
   const [selectedTag, setSelectedTag] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

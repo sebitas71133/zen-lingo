@@ -1,6 +1,6 @@
 export const getPromptByType = (type = "", translation, typeText = "") => {
   let prompt = "";
-  console.log({ type, translation, typeText });
+
   switch (type) {
     case "word":
       prompt = `Quiero que analices la palabra o frase "${translation}" y me devuelvas solo un objeto JSON que contenga los siguientes campos para llenar un formulario:

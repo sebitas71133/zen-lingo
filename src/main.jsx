@@ -9,7 +9,7 @@ import { RouterProvider } from "react-router-dom";
 
 import "@fontsource/roboto";
 import router from "./router/AppRouter";
-import { AuthProvider } from "./auth/AuthProvider";
+import { AuthProvider } from "./providers/AuthProvider";
 
 import "react-toastify/dist/ReactToastify.css";
 

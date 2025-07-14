@@ -32,19 +32,21 @@ export const LoginPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async () => {
+    const email = watch("email");
+    const password = watch("password");
+    await signInWithEmailPassowrdThunk({ email, password });
   };
 
   const onGoogleSignIn = async () => {
     await checkingAuthenticaction();
   };
 
-  const onEmailPasswordSignIn = async () => {
-    const email = watch("email");
-    const password = watch("password");
-    await signInWithEmailPassowrdThunk({ email, password });
-  };
+  // const onEmailPasswordSignIn = async () => {
+  //   const email = watch("email");
+  //   const password = watch("password");
+  //   await signInWithEmailPassowrdThunk({ email, password });
+  // };
 
   return (
     <MotionBox
@@ -148,7 +150,7 @@ export const LoginPage = () => {
                   sx={{ width: "90%", textTransform: "none" }}
                   type="submit"
                   disabled={isLoading}
-                  onClick={onEmailPasswordSignIn}
+                  // onClick={onEmailPasswordSignIn}
                 >
                   Sign in
                 </Button>
@@ -163,7 +165,7 @@ export const LoginPage = () => {
                   variant="outlined"
                   sx={{ width: "90%", textTransform: "none" }}
                   disabled={isLoading}
-                  type="submit"
+                  type="button"
                   onClick={onGoogleSignIn}
                 >
                   <Avatar

@@ -23,7 +23,7 @@ export const useFiltered = (
 
   const filteredItems = useMemo(() => {
     let result = [...data];
-    console.log({ result });
+
     // Filtrar
     if (search) {
       result = result.filter((verb) =>
@@ -47,8 +47,6 @@ export const useFiltered = (
 
     if (selectedTags.length > 0) {
       const selectedTagNames = selectedTags.map((tag) => tag.name);
-
-      console.log({ selectedTagNames });
 
       result = result.filter((verb) =>
         verb.tags?.some((tag) => selectedTagNames.includes(tag.name))
