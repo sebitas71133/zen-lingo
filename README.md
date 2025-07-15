@@ -14,7 +14,7 @@ Aplicación web construida con **React 19**, **MUI**, **Firebase** y **Redux Too
 - Framer Motion – animaciones
 - React Hook Form – formularios
 - Google Generative AI (Gemini API) – autocompletar contenido
-- jsPDF, xlsx, file-saver – exportar contenido
+- jsPDF, xlsx – exportar contenido
 - React Toastify, SweetAlert2 – notificaciones y alertas
 - Slick Carousel – carruseles de contenido
 
