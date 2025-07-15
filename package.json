@@ -18,7 +18,6 @@
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "@reduxjs/toolkit": "^2.6.0",
-    "file-saver": "^2.0.5",
     "firebase": "^11.9.1",
     "framer-motion": "^12.19.2",
     "jspdf": "^3.0.1",
