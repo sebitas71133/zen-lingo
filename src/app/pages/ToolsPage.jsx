@@ -123,9 +123,25 @@ export const ToolsPage = () => {
     }
   };
 
-  const handleImportJson = async (event) => {
+  const handleImportJson = async (event, word = "all") => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Se importarán datos a tu aplicación. ¿Deseas continuar?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, importar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!result.isConfirmed) {
+      toast.info("🚫 Importación cancelada");
+      return;
+    }
 
     const text = await file.text();
 
@@ -139,25 +155,21 @@ export const ToolsPage = () => {
         etiquetas = [],
       } = json;
 
-      console.log({ verbos });
-
-      //Procesar cada colección
-
-      if (palabras.length) {
-        for (const word of palabras) {
+      if ((word === "words" || word === "all") && palabras.length) {
+        for (const palabra of palabras) {
           const exists = words.some(
             (w) =>
-              w.word.trim().toLowerCase() === word.word.trim().toLowerCase()
+              w.word.trim().toLowerCase() === palabra.word.trim().toLowerCase()
           );
           if (!exists) {
-            const { id, ...rest } = word;
+            const { id, ...rest } = palabra;
             await addWord(rest);
           }
         }
         toast.success("✅ Palabras importadas correctamente");
       }
 
-      if (frases.length) {
+      if ((word === "phrases" || word === "all") && frases.length) {
         for (const phrase of frases) {
           const exists = phrases.some(
             (p) =>
@@ -172,12 +184,13 @@ export const ToolsPage = () => {
         toast.success("✅ Frases importadas correctamente");
       }
 
-      if (verbos.length) {
+      if ((word === "verbs" || word === "all") && verbos.length) {
         for (const verb of verbos) {
           const exists = verbs.some(
             (v) =>
               v.verb.trim().toLowerCase() === verb.verb.trim().toLowerCase()
           );
+          console.log(exists);
           if (!exists) {
             const { id, ...rest } = verb;
             await addVerb(rest);
@@ -186,7 +199,7 @@ export const ToolsPage = () => {
         toast.success("✅ Verbos importados correctamente");
       }
 
-      if (textos.length) {
+      if ((word === "texts" || word === "all") && textos.length) {
         for (const text of textos) {
           const exists = texts.some(
             (t) =>
@@ -200,7 +213,7 @@ export const ToolsPage = () => {
         toast.success("✅ Textos importados correctamente");
       }
 
-      if (etiquetas.length) {
+      if ((word === "tags" || word === "all") && etiquetas.length) {
         for (const tag of etiquetas) {
           const exists = tags.some(
             (t) => t.name.trim().toLowerCase() === tag.name.trim().toLowerCase()
@@ -314,27 +327,6 @@ export const ToolsPage = () => {
               Export to Excel
             </Button>
           </Grid>
-          {/* 🆕 Botón de importar JSON */}
-          <Grid item xs={12} sm={6} md={3}>
-            <input
-              type="file"
-              accept="application/json"
-              onChange={handleImportJson}
-              style={{ display: "none" }}
-              id="upload-json"
-            />
-            <label htmlFor="upload-json">
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                component="span"
-                startIcon={<FolderZipIcon />}
-              >
-                Importar JSON
-              </Button>
-            </label>
-          </Grid>
 
           {/* 🆕 Botón de reiniciar  */}
           <Grid item xs={12} sm={6} md={3}>
@@ -346,8 +338,148 @@ export const ToolsPage = () => {
               startIcon={<FolderZipIcon />}
               onClick={handleResetAll}
             >
-              Resetear todo
+              Delete All
             </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3, mt: 3 }}>
+        Import your favorites
+      </Typography>
+
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          borderRadius: 3,
+          backgroundColor: "background.paper",
+        }}
+      >
+        <Grid container spacing={2}>
+          {/* 🆕 Botón de importar JSON */}
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "all")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import all data
+              </Button>
+            </label>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "words")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import your words
+              </Button>
+            </label>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "phrases")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import your phrases
+              </Button>
+            </label>
+          </Grid>
+          {/* 🆕 Botón de importar JSON */}
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "verbs")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import your verbs
+              </Button>
+            </label>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "texts")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import your texts
+              </Button>
+            </label>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={(event) => handleImportJson(event, "tags")}
+              style={{ display: "none" }}
+              id="upload-json"
+            />
+            <label htmlFor="upload-json">
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                component="span"
+                startIcon={<FolderZipIcon />}
+              >
+                Import your tags
+              </Button>
+            </label>
           </Grid>
         </Grid>
       </Paper>

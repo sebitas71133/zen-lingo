@@ -32,7 +32,7 @@ export const wordApi = createApi({
         }
       },
       providesTags: ["Words"],
-      keepUnusedDataFor: 600, // 10 minutos
+      keepUnusedDataFor: 1800, // 30 minutos
     }),
 
     addWord: builder.mutation({

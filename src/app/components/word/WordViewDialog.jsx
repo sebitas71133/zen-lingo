@@ -30,6 +30,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
     translation,
     type,
     definition,
+    spokenForm,
     examples = [],
     tags = [],
   } = wordData;
@@ -82,6 +83,22 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
               <Stack direction={"row"} spacing={1} mt={1} alignItems={"center"}>
                 <Typography sx={{ ml: 4 }}>{definition}</Typography>
                 <SpeakWord textToSpeak={definition}></SpeakWord>
+              </Stack>
+            </Box>
+          )}
+
+          {/* Forma Hablada */}
+          {spokenForm && (
+            <Box mb={2}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <DescriptionIcon fontSize="small" color="action" />
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Forma Hablada
+                </Typography>
+              </Stack>
+              <Stack direction={"row"} spacing={1} mt={1} alignItems={"center"}>
+                <Typography sx={{ ml: 4 }}>{spokenForm}</Typography>
+                <SpeakWord textToSpeak={cleanedText(spokenForm)}></SpeakWord>
               </Stack>
             </Box>
           )}

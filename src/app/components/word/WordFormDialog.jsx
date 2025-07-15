@@ -222,7 +222,7 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
                   name="spokenForm"
                   control={control}
                   rules={{
-                    maxLength: { value: 200, message: "Máximo 200 caracteres" },
+                    maxLength: { value: 400, message: "Máximo 400 caracteres" },
                   }}
                   render={({ field }) => (
                     <TextField

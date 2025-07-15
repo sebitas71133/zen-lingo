@@ -51,7 +51,10 @@ export const CarouselComponent = () => {
       sx={{
         maxWidth: 600,
         mx: "auto",
-        width: "100%",
+        width: {
+          xs: "70%",
+          sm: "100%",
+        },
         px: { xs: 2, sm: 0 },
         boxSizing: "border-box",
       }}

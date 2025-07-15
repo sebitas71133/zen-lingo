@@ -30,7 +30,7 @@ export const textsApi = createApi({
         }
       },
       providesTags: ["Text"],
-      keepUnusedDataFor: 600, // 10 minutos
+      keepUnusedDataFor: 1800, // 30 minutos
     }),
 
     addText: builder.mutation({

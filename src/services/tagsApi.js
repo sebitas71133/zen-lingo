@@ -38,7 +38,7 @@ export const tagsApi = createApi({
         }
       },
       providesTags: ["Tag"],
-      keepUnusedDataFor: 600, // 10 minutos
+      keepUnusedDataFor: 1800, // 30 minutos
     }),
 
     addTag: builder.mutation({

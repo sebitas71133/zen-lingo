@@ -31,7 +31,7 @@ export const verbsApi = createApi({
         }
       },
       providesTags: ["Verb"],
-      keepUnusedDataFor: 600, // 10 minutos
+      keepUnusedDataFor: 1800, // 30 minutos
     }),
 
     addVerb: builder.mutation({

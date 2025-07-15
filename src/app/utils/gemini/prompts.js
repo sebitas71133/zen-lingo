@@ -38,15 +38,22 @@ export const getPromptByType = (type = "", translation, typeText = "") => {
     case "verb":
       prompt = `Quiero que analices el verbo: "${translation}" y me devuelvas únicamente un objeto JSON con esta estructura para completar un formulario:
 
-        {
-            "verb": "traducción al inglés (una sola palabra)",
-            "type": "si el verb es regular o irregular",
-            "examples": [
-                "Ejemplo 1 usando el verbo.",
-                "Ejemplo 2 usando el verbo.",
-                "Ejemplo 3 usando el verbo."
-            ],
-            "conjugations": {
+              {
+                "verb": "traducción al inglés (una sola palabra)",
+                "type": "si el verb es regular o irregular",
+                "examples": [
+                    "Ejemplo 1 usando el verbo.",
+                    "Ejemplo 2 usando el verbo.",
+                    "Ejemplo 3 usando el verbo."
+                ],
+                "commonForms": {
+                "base": "Verbo en su forma base",
+                "thirdPerson": "Verbo en su tercera persona",
+                "past": "Verbo en pasado simple",
+                "pastParticiple": "Verbo en participio pasado",
+                "presentParticiple": "Verbo en presente continuo(ing)",
+                },
+                "conjugations": {
                 "base": "Ejemplo usando la forma base",
                 "thirdPerson": "Ejemplo usando la tercera persona",
                 "past": "Ejemplo usando el pasado simple",

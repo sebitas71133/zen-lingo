@@ -11,9 +11,24 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Divider,
 } from "@mui/material";
+
 import TranslateIcon from "@mui/icons-material/Translate";
 import CategoryIcon from "@mui/icons-material/Category";
+
+import PersonIcon from "@mui/icons-material/Person";
+
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import CheckIcon from "@mui/icons-material/Check";
+import LoopIcon from "@mui/icons-material/Loop";
+
+const formIcons = {
+  thirdPerson: <PersonIcon fontSize="small" color="primary" />,
+  past: <HistoryEduIcon fontSize="small" color="primary" />,
+  pastParticiple: <CheckIcon fontSize="small" color="primary" />,
+  presentParticiple: <LoopIcon fontSize="small" color="primary" />,
+};
 
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import { SpeakWord } from "../../../components/SpeakWord";
@@ -24,6 +39,7 @@ export const VerbViewDialog = ({ open, onClose, verbData }) => {
     translation,
     type,
     context,
+    commonForms = {},
     examples = [],
     tags = [],
     verb,
@@ -32,20 +48,39 @@ export const VerbViewDialog = ({ open, onClose, verbData }) => {
   const { base, thirdPerson, past, pastParticiple, presentParticiple, future } =
     conjugations;
 
+  const { base: base2, ...restCommonForms } = commonForms;
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
         <Stack direction="row" alignItems="center" spacing={1} mt={1}>
           <TranslateIcon fontSize="small" color="primary" />
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h4" fontWeight="bold">
             {verb} — {translation}
           </Typography>
           <SpeakWord textToSpeak={verb}></SpeakWord>
         </Stack>
-        <Stack direction={"row"} alignItems={"center"} spacing={1} mt={1}>
+
+        <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+          <Grid container spacing={2} mt={1}>
+            {Object.entries(restCommonForms).map(([name, value]) => (
+              <Grid item xs={4} key={name}>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  {formIcons[name]}
+                  <Typography variant="body1" fontWeight="bold">
+                    {value}
+                  </Typography>
+                  <SpeakWord textToSpeak={value} />
+                </Stack>
+              </Grid>
+            ))}
+          </Grid>
+        </Stack>
+
+        <Stack direction={"row"} alignItems={"center"} spacing={1} mt={4}>
           <CategoryIcon fontSize="small" color="secondary" />
           <Typography
-            variant="subtitle2"
+            variant="subtitle1"
             color="text.secondary"
             textTransform="capitalize"
           >

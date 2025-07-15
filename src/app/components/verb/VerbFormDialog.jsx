@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   MenuItem,
   Stack,
   TextField,
@@ -35,6 +36,13 @@ const DEFAULT_VALUES = {
   type: "",
   examples: [],
   tags: [],
+  commonForms: {
+    base: "",
+    thirdPerson: "",
+    past: "",
+    pastParticiple: "",
+    presentParticiple: "",
+  },
   conjugations: {
     base: "",
     thirdPerson: "",
@@ -128,6 +136,8 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
       // Llamada a API Gemini (o tu función generadora)
       const result = await translatorApi(translation, "verb");
 
+      console.log({ result });
+
       if (result) {
         // Campos simples
         if (result.verb) setValue("verb", result.verb);
@@ -135,6 +145,24 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
         if (result.examples && Array.isArray(result.examples)) {
           setValue("examples", result.examples);
           setExampleInput("");
+        }
+
+        // Common forms
+
+        if (result.commonForms) {
+          const comForms = result.commonForms;
+
+          if (comForms.base) setValue("commonForms.base", comForms.base);
+          if (comForms.thirdPerson)
+            setValue("commonForms.thirdPerson", comForms.thirdPerson);
+          if (comForms.past) setValue("commonForms.past", comForms.past);
+          if (comForms.pastParticiple)
+            setValue("commonForms.pastParticiple", comForms.pastParticiple);
+          if (comForms.presentParticiple)
+            setValue(
+              "commonForms.presentParticiple",
+              comForms.presentParticiple
+            );
         }
 
         // Conjugaciones
@@ -254,26 +282,51 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
                 </Button>
               )}
               {/* Verbo */}
-              <Stack direction={"row"} spacing={1}>
-                <Controller
-                  name="verb"
-                  control={control}
-                  rules={{ required: "Campo obligatorio" }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Verbo en inglés"
-                      fullWidth
-                      error={!!errors.verb}
-                      helperText={errors.verb?.message}
-                    />
-                  )}
-                />
 
-                {watch("verb") && (
-                  <SpeakWord textToSpeak={watch("verb")}></SpeakWord>
-                )}
-              </Stack>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <Controller
+                    name="verb"
+                    control={control}
+                    rules={{ required: "Campo obligatorio" }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Forma base"
+                        fullWidth
+                        error={!!errors.verb}
+                        helperText={errors.verb?.message}
+                      />
+                    )}
+                  />
+                  <SpeakWord textToSpeak={watch("verb")} />
+                </Grid>
+
+                {[
+                  { name: "thirdPerson", label: "Tercera persona" },
+                  { name: "past", label: "Pasado" },
+                  { name: "pastParticiple", label: "Participio pasado" },
+                  { name: "presentParticiple", label: "Gerundio" },
+                ].map(({ name, label }) => (
+                  <Grid item xs={12} sm={4} key={name}>
+                    <Controller
+                      name={`commonForms.${name}`}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label={label}
+                          multiline
+                          maxRows={4}
+                          fullWidth
+                        />
+                      )}
+                    />
+                    <SpeakWord textToSpeak={watch(`commonForms.${name}`)} />
+                  </Grid>
+                ))}
+              </Grid>
+
               {/* Tipo */}
               <Controller
                 name="type"
