@@ -20,23 +20,46 @@ Aplicación web construida con **React 19**, **MUI**, **Firebase** y **Redux Too
 
 ---
 
+### 🖼️ Vista previa de la aplicación
+
+| Words                                                                                     | View                                                                                     | Autocomplete                                                                                     |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| ![Words](https://github.com/user-attachments/assets/afff44d3-663d-4432-b075-05111c2de927) | ![View](https://github.com/user-attachments/assets/6666ec06-7d5f-4c3e-96df-08e25f92599d) | ![Autocomplete](https://github.com/user-attachments/assets/01f403a4-ec1c-417f-b374-4def6a3c60e1) |
+
+| Tags                                                                                     | Tools                                                                                     | Dashboard                                                                                     |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| ![Tags](https://github.com/user-attachments/assets/65de5471-7ca5-4f79-a095-48527242aac3) | ![Tools](https://github.com/user-attachments/assets/e6874873-2c75-4e59-b192-740ed93353f5) | ![Dashboard](https://github.com/user-attachments/assets/87d23939-2dfa-41c3-98fd-7835290ffd61) |
+
+| Home                                                                                     | Login                                                                                    |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| ![Home](https://github.com/user-attachments/assets/9f8c21c3-e088-4cf6-ac09-12aacd6bfc0c) | ![Login](https://github.com/user-attachments/assets/ecf8cd0b-7996-4758-9470-04108c1c6868) |
+
+
+---
+
 ## 📦 Instalación
 
 1. Clona el repositorio:
 
-git clone https://github.com/tu-usuario/englishapp.git
-cd englishapp
+```bash
+git clone https://github.com/sebitas71133/zen-lingo
+cd zen-lingo
+```
 
 2. Instala las dependencias:
 
+```bash
 npm install
+```
 
 3. Crea el archivo `.env`:
 
+```bash
 cp .env.template .env
-
+```
 Edita tu archivo `.env` con las claves necesarias de Firebase y Gemini:
 
+```env
 VITE_FIREBASE_API_KEY=...
 VITE_FIREBASE_AUTH_DOMAIN=...
 VITE_FIREBASE_PROJECT_ID=...
@@ -45,10 +68,13 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
 VITE_FIREBASE_MEASUREMENT_ID=...
 VITE_GEMINI_API_KEY=...
+```
 
 4. Levanta el proyecto:
 
+```bash
 npm run dev
+```
 
 ---
 
@@ -88,7 +114,7 @@ npm run dev
 
 ## 🛠️ Autor
 
-Jesús Sebastián Huamanculi Casavilca - [GitHub](https://github.com/tu-usuario)
+Jesús Sebastián Huamanculi Casavilca - [GitHub](https://github.com/sebitas71133)
 
 ---
 
