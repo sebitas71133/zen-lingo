@@ -96,6 +96,7 @@ export const TextFormDialog = ({ open, onClose, initialData }) => {
       });
     }
     onClose();
+    reset();
   };
 
   const handleAutoFill = async () => {

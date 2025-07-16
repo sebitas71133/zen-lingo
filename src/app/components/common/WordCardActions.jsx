@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { exportAllToJSON } from "../../utils/exportNotes";
 
-export const WordCardActions = ({ onEdit, onDelete }) => {
+export const WordCardActions = ({ onEdit, onDelete, data, nameData }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -40,6 +41,15 @@ export const WordCardActions = ({ onEdit, onDelete }) => {
           }}
         >
           Editar
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            exportAllToJSON({ [nameData]: data }, `${nameData}`);
+
+            handleMenuClose();
+          }}
+        >
+          Exportar
         </MenuItem>
         <MenuItem
           onClick={() => {

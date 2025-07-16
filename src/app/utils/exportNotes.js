@@ -2,7 +2,10 @@ import jsPDF from "jspdf";
 import * as XLSX from "xlsx";
 // import "jspdf-autotable";
 
-export const exportAllToJSON = ({ words, phrases, texts, verbs, tags }) => {
+export const exportAllToJSON = (
+  { words, phrases, texts, verbs, tags },
+  nameFile = "export-data"
+) => {
   const data = {
     palabras: words,
     frases: phrases,
@@ -18,7 +21,7 @@ export const exportAllToJSON = ({ words, phrases, texts, verbs, tags }) => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "mi-data-translator.json";
+  a.download = nameFile || "mi-data-translator.json";
   a.click();
   URL.revokeObjectURL(url);
 };

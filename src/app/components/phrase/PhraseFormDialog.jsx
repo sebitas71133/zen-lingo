@@ -99,6 +99,7 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
       });
     }
     onClose();
+    reset();
   };
 
   const handleAutoFill = async () => {

@@ -125,6 +125,7 @@ export const VerbFormDialog = ({ open, onClose, initialData }) => {
       });
     }
     onClose();
+    reset();
   };
 
   const handleAutoFill = async () => {

@@ -132,7 +132,13 @@ export const VerbCard = ({
               </IconButton>
             </Tooltip>
 
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
+            <WordCardActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              data={[verb]}
+              nameData={"verbs"}
+              size="small"
+            />
           </Stack>
         </Box>
 

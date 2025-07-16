@@ -134,7 +134,13 @@ export const TextCard = ({
               </IconButton>
             </Tooltip>
 
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
+            <WordCardActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              data={[text]}
+              nameData={"texts"}
+              size="small"
+            />
           </Stack>
         </Box>
 

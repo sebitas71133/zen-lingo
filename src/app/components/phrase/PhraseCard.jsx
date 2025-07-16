@@ -144,7 +144,13 @@ export const PhraseCard = ({
               </IconButton>
             </Tooltip>
 
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
+            <WordCardActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              data={[phrase]}
+              nameData={"phrases"}
+              size="small"
+            />
           </Stack>
         </Box>
 

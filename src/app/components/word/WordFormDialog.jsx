@@ -104,6 +104,7 @@ export const WordFormDialog = ({ open, onClose, initialData }) => {
       });
     }
     onClose();
+    reset();
   };
 
   const handleAutoFill = async () => {

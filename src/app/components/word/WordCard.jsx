@@ -130,7 +130,13 @@ export const WordCard = ({
                 )}
               </IconButton>
             </Tooltip>
-            <WordCardActions onEdit={onEdit} onDelete={onDelete} size="small" />
+            <WordCardActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              data={[word]}
+              nameData={"words"}
+              size="small"
+            />
           </Stack>
         </Box>
 
