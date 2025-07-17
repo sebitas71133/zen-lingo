@@ -9,6 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import { SpeakWord } from "../../../components/SpeakWord";
+import { splitIntoSentences } from "../../utils/cleanedText";
 
 export const TextViewDialog = ({ open, onClose, textData }) => {
   const {
@@ -25,10 +26,10 @@ export const TextViewDialog = ({ open, onClose, textData }) => {
       <DialogContent dividers>
         {originalText && (
           <>
-            {originalText.split(". ").map((sentence, index) => (
+            {splitIntoSentences(originalText).map((sentence, index) => (
               <Box key={index} display="flex" alignItems="center" mb={1}>
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  {sentence.trim() + (sentence.endsWith(".") ? "" : ".")}
+                  {sentence}
                 </Typography>
                 <SpeakWord textToSpeak={sentence} />
               </Box>

@@ -128,7 +128,7 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               : result.type
           );
 
-        if (result.context) setValue("translation", result.translation);
+        if (result.translation) setValue("translation", result.translation);
         if (result.context) setValue("translation", result.context);
         if (result.flapping) setValue("flapping", result.flapping);
         if (result.spanish_pronunciation)

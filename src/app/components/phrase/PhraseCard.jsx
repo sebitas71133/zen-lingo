@@ -83,6 +83,8 @@ export const PhraseCard = ({
             whiteSpace: "break-word",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            WebkitLineClamp: 3, // ✅ Máximo de 3 líneas
+            WebkitBoxOrient: "vertical", // ✅ Orientación vertical
           }}
           title={`${term} — ${translation}`}
         >
