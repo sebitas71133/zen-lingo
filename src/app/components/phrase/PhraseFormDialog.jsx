@@ -24,9 +24,12 @@ import { SpeakWord } from "../../../components/SpeakWord";
 const WORD_TYPES = ["phrases", "idioms"];
 const DEFAULT_VALUES = {
   phrase: "",
+  translation: "",
   type: "",
   context: "",
   examples: [],
+  flapping: "",
+  spanish_pronunciation: "",
   tags: [],
 };
 
@@ -111,6 +114,8 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
       // Llamada a API Gemini con tipo "phrase"
       const result = await translatorApi(translation, "phrase");
 
+      console.log({ result });
+
       if (result) {
         // if (result.phrase) setValue("phrase", result.phrase);
         if (result.type)
@@ -122,7 +127,12 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
               ? "idioms"
               : result.type
           );
-        if (result.context) setValue("context", result.context);
+
+        if (result.context) setValue("translation", result.translation);
+        if (result.context) setValue("translation", result.context);
+        if (result.flapping) setValue("flapping", result.flapping);
+        if (result.spanish_pronunciation)
+          setValue("spanish_pronunciation", result.spanish_pronunciation);
         if (result.examples && Array.isArray(result.examples)) {
           setValue("examples", result.examples);
           setExampleInput("");
@@ -186,6 +196,28 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                 )}
               </Stack>
 
+              {/* Traduccion */}
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="translation"
+                  control={control}
+                  // rules={{ required: "Campo obligatorio" }}
+                  fullWidth
+                  multiline
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Traduccion de la Frase o Idiomatica (opcional)"
+                      fullWidth
+                      error={!!errors.translation}
+                      helperText={errors.translation?.message}
+                      multiline
+                      maxRows={4}
+                    />
+                  )}
+                />
+              </Stack>
+
               {watch("phrase") && (
                 <Button
                   variant="outlined"
@@ -236,6 +268,50 @@ export const PhraseFormDialog = ({ open, onClose, initialData }) => {
                 />
                 {watch("context") && (
                   <SpeakWord textToSpeak={watch("context")}></SpeakWord>
+                )}
+              </Stack>
+
+              {/* flapping */}
+
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="flapping"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="flapping (opcional) - Puede contener errores"
+                      fullWidth
+                      multiline
+                      rows={1}
+                    />
+                  )}
+                />
+                {/* {watch("flapping") && (
+                  <SpeakWord textToSpeak={watch("flapping")}></SpeakWord>
+                )} */}
+              </Stack>
+
+              {/* spanish pronunciantion */}
+
+              <Stack direction={"row"} spacing={1}>
+                <Controller
+                  name="spanish_pronunciation"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Pronunciacio español (opcional) - Puede contener errores"
+                      fullWidth
+                      multiline
+                      rows={1}
+                    />
+                  )}
+                />
+                {watch("spanish_pronunciation") && (
+                  <SpeakWord
+                    textToSpeak={watch("spanish_pronunciation")}
+                  ></SpeakWord>
                 )}
               </Stack>
 

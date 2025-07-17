@@ -13,8 +13,8 @@ export const useFiltered = (
   const [itemsPerPage, setItemsPerPageS] = useState(defaultItemsPerPage);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  const [onlyLearned, setOnlyFavorite] = useState(false);
-  const [onlyFavorite, setOnlyLearned] = useState(false);
+  const [onlyLearned, setOnlyLearned] = useState(false);
+  const [onlyFavorite, setOnlyFavorite] = useState(false);
 
   const setItemsPerPage = (itemsPerPage) => {
     localStorage.setItem(`${nameText}_page`, itemsPerPage);

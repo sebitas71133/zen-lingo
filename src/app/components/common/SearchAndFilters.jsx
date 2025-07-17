@@ -7,6 +7,9 @@ import {
   Tooltip,
   Grid,
   Collapse,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 
 import { useTagStore } from "../../hooks/useTagStore";
@@ -25,6 +28,11 @@ export const SearchAndFilters = ({
   type,
   setSelectedTags,
   selectedTags,
+
+  setOnlyFavorite,
+  setOnlyLearned,
+  onlyLearned,
+  onlyFavorite,
   typeColors: wordTypeColors = {},
 }) => {
   const { tags = [], isLoading } = useTagStore();
@@ -81,7 +89,7 @@ export const SearchAndFilters = ({
             {/* Items per page */}
 
             {itemsPerPage && (
-              <Grid item xs={6} sm={4} md={2}>
+              <Grid item xs={6} sm={4} md={1}>
                 <Tooltip title="Cantidad de frases por página">
                   <TextField
                     label="Por página"
@@ -103,7 +111,7 @@ export const SearchAndFilters = ({
 
             {/* Type */}
             {wordTypeColors && (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={2}>
                 <TextField
                   label="Tipo"
                   select
@@ -163,6 +171,32 @@ export const SearchAndFilters = ({
                 />
               </Grid>
             )}
+
+            <Grid item xs={12} sm={3} md={3}>
+              <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={onlyLearned}
+                      onChange={(e) => {
+                        console.log("Learned:", e.target.checked);
+                        setOnlyLearned(e.target.checked);
+                      }}
+                    />
+                  }
+                  label="Learned"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={onlyFavorite}
+                      onChange={(e) => setOnlyFavorite(e.target.checked)}
+                    />
+                  }
+                  label="Favorites"
+                />
+              </FormGroup>
+            </Grid>
           </Grid>
         </Box>
       </Collapse>

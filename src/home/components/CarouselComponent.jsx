@@ -43,13 +43,13 @@ export const CarouselComponent = () => {
     slidesToScroll: 1,
     autoplay: true,
     arrows: false,
-    autoplaySpeed: 3500,
+    autoplaySpeed: 3000,
   };
 
   return (
     <Box
       sx={{
-        maxWidth: 600,
+        maxWidth: 700,
         mx: "auto",
         width: {
           xs: "70%",

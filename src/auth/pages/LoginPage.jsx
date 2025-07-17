@@ -85,7 +85,6 @@ export const LoginPage = () => {
           </Typography>
           <Grid2 container>
             <Grid2
-              item
               xs={12}
               sx={{ mt: 2, display: "flex", justifyContent: "center" }}
               width={"100%"}
@@ -114,7 +113,6 @@ export const LoginPage = () => {
             </Grid2>
 
             <Grid2
-              item
               xs={12}
               sx={{ mt: 2, display: "flex", justifyContent: "center" }}
               width={"100%"}
@@ -138,7 +136,6 @@ export const LoginPage = () => {
 
             <Grid2 container spacing={2} sx={{ mb: 2, mt: 4 }} width={"100%"}>
               <Grid2
-                item
                 xs={12}
                 // md={6}
                 sx={{ display: "flex", justifyContent: "center" }}
@@ -183,7 +180,6 @@ export const LoginPage = () => {
               </Grid2>
             </Grid2>
             <Grid2
-              item
               xs={12}
               sx={{ display: "flex", justifyContent: "center" }}
               width={"100%"}

@@ -37,6 +37,11 @@ export const TextList = ({ texts, showFilters }) => {
     setItemsPerPage,
     setSelectedTags,
 
+    setOnlyFavorite,
+    setOnlyLearned,
+    onlyLearned,
+    onlyFavorite,
+
     filteredItems,
   } = useFiltered(texts, "title", localStorage.getItem("text_page") ?? 6);
 
@@ -110,6 +115,10 @@ export const TextList = ({ texts, showFilters }) => {
         setSelectedTags={setSelectedTags}
         selectedTags={selectedTags}
         typeColors={textTypeColors}
+        setOnlyFavorite={setOnlyFavorite}
+        setOnlyLearned={setOnlyLearned}
+        onlyLearned={onlyLearned}
+        onlyFavorite={onlyFavorite}
       ></SearchAndFilters>
 
       <Grid container spacing={2}>

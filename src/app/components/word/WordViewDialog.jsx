@@ -18,7 +18,6 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import LabelIcon from "@mui/icons-material/Label";
 import { SpeakWord } from "../../../components/SpeakWord";
-import { cleanedText } from "../../utils/cleanedText";
 
 const MotionBox = motion.create(Box);
 
@@ -98,7 +97,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
               </Stack>
               <Stack direction={"row"} spacing={1} mt={1} alignItems={"center"}>
                 <Typography sx={{ ml: 4 }}>{spokenForm}</Typography>
-                <SpeakWord textToSpeak={cleanedText(spokenForm)}></SpeakWord>
+                <SpeakWord textToSpeak={spokenForm}></SpeakWord>
               </Stack>
             </Box>
           )}
@@ -119,7 +118,7 @@ export const WordViewDialog = ({ open, onClose, wordData }) => {
                     variant="body2"
                     sx={{ fontStyle: "italic" }}
                   >
-                    “{ex}”<SpeakWord textToSpeak={cleanedText(ex)}></SpeakWord>
+                    “{ex}”<SpeakWord textToSpeak={ex}></SpeakWord>
                   </Typography>
                 ))}
               </Stack>

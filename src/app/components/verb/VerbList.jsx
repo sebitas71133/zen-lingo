@@ -27,6 +27,11 @@ export const VerbList = ({ verbs, showFilters }) => {
     setItemsPerPage,
     setSelectedTags,
 
+    setOnlyFavorite,
+    setOnlyLearned,
+    onlyLearned,
+    onlyFavorite,
+
     filteredItems,
   } = useFiltered(verbs, "verb", localStorage.getItem("verb_page") ?? 6);
 
@@ -113,6 +118,10 @@ export const VerbList = ({ verbs, showFilters }) => {
         setSelectedTags={setSelectedTags}
         selectedTags={selectedTags}
         typeColors={verbTypeColors}
+        setOnlyFavorite={setOnlyFavorite}
+        setOnlyLearned={setOnlyLearned}
+        onlyLearned={onlyLearned}
+        onlyFavorite={onlyFavorite}
       ></SearchAndFilters>
 
       {/* VERB LIST */}

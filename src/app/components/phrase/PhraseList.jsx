@@ -31,6 +31,11 @@ export const PhraseList = ({ phrases, showFilters }) => {
     setSelectedTags,
 
     filteredItems,
+
+    setOnlyFavorite,
+    setOnlyLearned,
+    onlyLearned,
+    onlyFavorite,
   } = useFiltered(phrases, "phrase", localStorage.getItem("phrase_page") ?? 6);
 
   const {
@@ -108,6 +113,10 @@ export const PhraseList = ({ phrases, showFilters }) => {
         setSelectedTags={setSelectedTags}
         selectedTags={selectedTags}
         typeColors={phraseTypeColors}
+        setOnlyFavorite={setOnlyFavorite}
+        setOnlyLearned={setOnlyLearned}
+        onlyLearned={onlyLearned}
+        onlyFavorite={onlyFavorite}
       ></SearchAndFilters>
 
       <Box>

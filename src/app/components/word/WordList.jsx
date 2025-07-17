@@ -29,6 +29,10 @@ export const WordList = ({ words, showFilters = false }) => {
     setSortBy,
     setItemsPerPage,
     setSelectedTags,
+    setOnlyFavorite,
+    setOnlyLearned,
+    onlyLearned,
+    onlyFavorite,
 
     filteredItems,
   } = useFiltered(words, "word", localStorage.getItem("word_page") ?? 6);
@@ -103,7 +107,7 @@ export const WordList = ({ words, showFilters = false }) => {
   }, [openForm]);
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box sx={{ mt: 2 }}>
       <SearchAndFilters
         showFilters={showFilters}
         setSearch={setSearch}
@@ -119,6 +123,10 @@ export const WordList = ({ words, showFilters = false }) => {
         setSelectedTags={setSelectedTags}
         selectedTags={selectedTags}
         typeColors={wordTypeColors}
+        setOnlyFavorite={setOnlyFavorite}
+        setOnlyLearned={setOnlyLearned}
+        onlyLearned={onlyLearned}
+        onlyFavorite={onlyFavorite}
       ></SearchAndFilters>
       <Grid container spacing={2}>
         {currentWords.map((word) => (

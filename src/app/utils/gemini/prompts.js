@@ -22,16 +22,17 @@ export const getPromptByType = (type = "", translation, typeText = "") => {
     case "phrase":
       prompt = `Quiero que analices el phrasal verb o idiom : "${translation}" y me devuelvas solo un objeto JSON que contenga los siguientes campos para llenar un formulario:
 
-        {
-  
+      {
+        "translation" : "Su traduccion al español",
         "type": "segun lo analizado coloca phrases o idioms, solo puedes elegir uno de esas dos opciones",
-        "context": "En que contexto se usa dicha frase o idiom en inglés y seguida entre parentesis su traduccion al español",
-        "examples": ["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"]
-        
-        }
+        "context": "En qué contexto se usa dicha frase o idiom en inglés y seguida entre paréntesis su traducción al español",
+        "examples": ["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"],
+        "flapping": "Cómo suena dicha frase con la pronunciación típica americana si aplica (por ejemplo, 'shut up' suena como 'shuddup' o 'put it on' suena como 'puddit on'). Asegúrate de analizar cuidadosamente si el 'flapping' es aplicable y, de ser así, inclúyelo.",
+        "spanish_pronunciation": "Cómo sonaría esa frase si la escribimos como se pronuncia para un hispanohablante (ej: 'sharáp'. 'puri ron')"
+      }
 
-        Los ejemplos no deben ser tan breves y en ingles
-        No incluyas texto adicional, solo responde con el JSON directamente.`;
+      Los ejemplos no deben ser tan breves y deben estar en inglés.
+      No incluyas texto adicional, solo responde con el JSON directamente.`;
 
       break;
 

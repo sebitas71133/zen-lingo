@@ -29,6 +29,8 @@ export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
     translation,
     type,
     context,
+    flapping,
+    spanish_pronunciation,
     examples = [],
     tags = [],
   } = phraseData;
@@ -80,6 +82,32 @@ export const PhraseViewDialog = ({ open, onClose, phraseData }) => {
                 <SpeakWord textToSpeak={context}></SpeakWord>
               </Stack>
               <Typography sx={{ ml: 4 }}>{context}</Typography>
+            </Box>
+          )}
+
+          {flapping && (
+            <Box mb={2}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <DescriptionIcon fontSize="small" color="action" />
+                <Typography variant="subtitle2" fontWeight="bold">
+                  flapping
+                </Typography>
+                <SpeakWord textToSpeak={flapping}></SpeakWord>
+              </Stack>
+              <Typography sx={{ ml: 4 }}>{flapping}</Typography>
+            </Box>
+          )}
+
+          {spanish_pronunciation && (
+            <Box mb={2}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <DescriptionIcon fontSize="small" color="action" />
+                <Typography variant="subtitle2" fontWeight="bold">
+                  spanish pronunciation
+                </Typography>
+                <SpeakWord textToSpeak={spanish_pronunciation}></SpeakWord>
+              </Stack>
+              <Typography sx={{ ml: 4 }}>{spanish_pronunciation}</Typography>
             </Box>
           )}
 
