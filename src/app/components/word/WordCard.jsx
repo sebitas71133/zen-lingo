@@ -72,8 +72,9 @@ export const WordCard = ({
             whiteSpace: "break-word",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            WebkitLineClamp: 3, // ✅ Máximo de 3 líneas
-            WebkitBoxOrient: "vertical", // ✅ Orientación vertical
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
           }}
           title={`${term} — ${translation}`}
         >

@@ -71,6 +71,7 @@ export const VerbCard = ({
             whiteSpace: "break-word",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            display: "-webkit-box",
             WebkitLineClamp: 3, // ✅ Máximo de 3 líneas
             WebkitBoxOrient: "vertical", // ✅ Orientación vertical
           }}

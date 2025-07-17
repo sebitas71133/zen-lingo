@@ -81,10 +81,11 @@ export const PhraseCard = ({
             textTransform: "capitalize",
             fontWeight: "bold",
             whiteSpace: "break-word",
+            display: "-webkit-box",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            WebkitLineClamp: 3, // ✅ Máximo de 3 líneas
-            WebkitBoxOrient: "vertical", // ✅ Orientación vertical
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
           }}
           title={`${term} — ${translation}`}
         >
