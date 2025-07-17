@@ -54,8 +54,12 @@ export const TextList = ({ texts, showFilters }) => {
 
   const { textEditForm: openForm } = useSelector((state) => state.ui.dialogs);
 
-  const { deleteTextById, toggleFavoriteById, toggleIsReadById, isUpdating } =
-    useTextStore();
+  const {
+    deleteTextById,
+    toggleFavoriteById,
+    toggleIsLearnedById,
+    isUpdating,
+  } = useTextStore();
 
   const [textToEdit, setTextToEdit] = useState(null);
 
@@ -68,8 +72,8 @@ export const TextList = ({ texts, showFilters }) => {
     await toggleFavoriteById(text.id, text);
   };
 
-  const handleToggleIsRead = async (text) => {
-    await toggleIsReadById(text.id, text);
+  const handleToggleIsLearned = async (text) => {
+    await toggleIsLearnedById(text.id, text);
   };
 
   const handleDelete = async (text) => {
@@ -128,8 +132,8 @@ export const TextList = ({ texts, showFilters }) => {
               text={text}
               onEdit={() => handleEdit(text)}
               onDelete={() => handleDelete(text)}
-              onToggleRead={() => handleToggleIsRead(text)}
               onToggleFavorite={() => handleToggleFavorite(text)}
+              onToggleLearned={() => handleToggleIsLearned(text)}
               isUpdating={isUpdating}
             />
           </Grid>

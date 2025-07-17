@@ -6,7 +6,9 @@ import {
   Stack,
   Chip,
   Divider,
+  Box,
 } from "@mui/material";
+import { SpeakWord } from "../../../components/SpeakWord";
 
 export const TextViewDialog = ({ open, onClose, textData }) => {
   const {
@@ -23,9 +25,14 @@ export const TextViewDialog = ({ open, onClose, textData }) => {
       <DialogContent dividers>
         {originalText && (
           <>
-            <Typography variant="body1" gutterBottom>
-              {originalText}
-            </Typography>
+            {originalText.split(". ").map((sentence, index) => (
+              <Box key={index} display="flex" alignItems="center" mb={1}>
+                <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                  {sentence.trim() + (sentence.endsWith(".") ? "" : ".")}
+                </Typography>
+                <SpeakWord textToSpeak={sentence} />
+              </Box>
+            ))}
             <Divider sx={{ my: 2 }} />
           </>
         )}
