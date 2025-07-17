@@ -116,6 +116,12 @@ npm run dev
 
 ---
 
+## 🧩 Video
+
+https://github.com/user-attachments/assets/09c2974e-5bac-48e0-aad1-2ccb2345e839
+
+---
+
 ## 🛠️ Autor
 
 Jesús Sebastián Huamanculi Casavilca - [GitHub](https://github.com/sebitas71133)
