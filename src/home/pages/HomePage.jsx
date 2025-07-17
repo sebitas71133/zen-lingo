@@ -29,7 +29,7 @@ const HomePage = () => {
       sx={{
         color: "#fff",
         textAlign: "center",
-        mt: 5,
+        mt: 20,
       }}
     >
       <Typography
@@ -94,7 +94,14 @@ const HomePage = () => {
         display="flex"
         flexWrap="wrap"
         justifyContent="center"
+        alignItems={"center"}
         gap={4}
+        sx={{
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
+        }}
       >
         {[
           {
@@ -140,7 +147,16 @@ const HomePage = () => {
 
       {/* Video */}
 
-      <Box mt={20}>
+      <Box
+        sx={{
+          width: {
+            xs: "60%",
+            sm: "60%",
+            md: "100%",
+          },
+          margin: "100px auto",
+        }}
+      >
         <Typography
           variant="h5"
           color="text.primary"

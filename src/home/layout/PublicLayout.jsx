@@ -22,7 +22,7 @@ export const PublicLayout = () => {
           p: 3,
 
           height: "100%",
-
+          width: "100vw",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
